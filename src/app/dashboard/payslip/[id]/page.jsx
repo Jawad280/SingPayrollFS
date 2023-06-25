@@ -8,10 +8,11 @@ import { useRouter } from 'next/navigation';
 const IndividualPayslip = ({params}) => {
 
     const { back } = useRouter();
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-    const { data, error, isLoading } = useSWR(`http://localhost:3000/api/payslips/${params.id}`, fetcher);
+    const { data, error, isLoading } = useSWR(apiUrl + `/api/payslips/${params.id}`, fetcher);
   
     if (isLoading) {
       return <div>Loading...</div>;

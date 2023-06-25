@@ -7,6 +7,8 @@ import Link from 'next/link';
 
 const CreateEmployee = () => {
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
     const [name, setName] = useState('');
     const [NRIC, setNRIC] = useState('')
     const [dateOfBirth, setDateOfBirth] = useState('');
@@ -60,7 +62,7 @@ const CreateEmployee = () => {
         }
 
         try {
-            const res = await fetch('http://localhost:3000/api/employees', {
+            const res = await fetch(apiUrl + '/api/employees', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

@@ -12,12 +12,14 @@ const EditCompany = ({companyId}) => {
     const [companyName, setCompanyName] = useState('');
     const [license, setLicense] = useState('');
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
     const { push } = useRouter();
 
     // fetch company
     const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-    const { data, error, isLoading } = useSWR(`http://localhost:3000/api/users/${companyId}`, fetcher);
+    const { data, error, isLoading } = useSWR(apiUrl + `/api/users/${companyId}`, fetcher);
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -40,7 +42,7 @@ const EditCompany = ({companyId}) => {
             license: capturedLicence
         }
 
-        fetch(`http://localhost:3000/api/users/${companyId}`, {
+        fetch(apiUrl + `/api/users/${companyId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

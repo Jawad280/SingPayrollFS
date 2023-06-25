@@ -13,6 +13,7 @@ const RegisterPage = ({setClicked}) => {
 
     const [err, setErr] = useState(false);
     const router = useRouter();
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,7 +21,7 @@ const RegisterPage = ({setClicked}) => {
         const newUser = {username, companyName, password, isAdmin: false, license: license};
 
         try {
-            const res = await fetch("http://localhost:3000/api/users/", {
+            const res = await fetch( apiUrl + "/api/users/", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
