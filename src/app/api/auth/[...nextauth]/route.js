@@ -2,6 +2,8 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcryptjs';
 
+const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
 const handler = NextAuth({
     providers: [
       CredentialsProvider({
@@ -11,7 +13,7 @@ const handler = NextAuth({
           console.log("authorize function invoked");
           try {
 
-            const res = await fetch(`http:localhost:3000/api/users/username/${credentials.username}`);
+            const res = await fetch(`${apiUrl}/api/users/username/${credentials.username}`);
   
             const user = await res.json();
             if (user) {
