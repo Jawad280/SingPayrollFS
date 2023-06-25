@@ -6,11 +6,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const AdminPage = () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-    const { data, error, isLoading } = useSWR(apiUrl + `/api/users`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/users`, fetcher);
   
     if (isLoading) {
       return <div>Loading...</div>;

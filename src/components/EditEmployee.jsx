@@ -28,12 +28,11 @@ const EditEmployee = ({employeeId}) => {
     const [showResignation, setShowResignation] = useState(isResigned);
 
     const { push } = useRouter();
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     // fetch employee
     const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-    const { data, error, isLoading } = useSWR( apiUrl + `/api/employees/${employeeId}`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/employees/${employeeId}`, fetcher);
 
     if (isLoading) {
       return <div>Loading...</div>;
@@ -83,7 +82,7 @@ const EditEmployee = ({employeeId}) => {
         }
         console.log(updatedEmployee);
 
-        fetch( apiUrl + `/api/employees/${employeeId}`, {
+        fetch(`/api/employees/${employeeId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

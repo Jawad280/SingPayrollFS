@@ -11,7 +11,6 @@ const Dashboard = () => {
 
   const session = useSession();
   const companyName = session.data.user.name.companyName;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 
   const { push } = useRouter();
@@ -23,7 +22,7 @@ const Dashboard = () => {
   // // fetch employees
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-  const { data, error, isLoading } = useSWR(apiUrl + `/api/employees/companyName/${companyName}`, fetcher);
+  const { data, error, isLoading } = useSWR(`/api/employees/companyName/${companyName}`, fetcher);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -65,7 +64,7 @@ const Dashboard = () => {
   const getCPF = async (employee, cmy) => {
     try {
       console.log("CPF is being generated ..............")
-      const res = await fetch(apiUrl + '/api/extract/', {
+      const res = await fetch('/api/extract/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +105,7 @@ const Dashboard = () => {
       }
 
       try {
-          const res = await fetch(apiUrl + '/api/payslips/', {
+          const res = await fetch('/api/payslips/', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
@@ -125,7 +124,7 @@ const Dashboard = () => {
     const NRIC = employee.NRIC;
     console.log("Checker activated", name, NRIC);
 
-    const res = await fetch(apiUrl + `/api/payslips/name/${name}/${NRIC}`);
+    const res = await fetch(`/api/payslips/name/${name}/${NRIC}`);
     const data = await res.json();
     console.log(data);
     
@@ -151,7 +150,7 @@ const Dashboard = () => {
         designation: data.designation
       }
   
-      const send = await fetch(apiUrl + `/api/payslips/${data.id}`, {
+      const send = await fetch(`/api/payslips/${data.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -190,7 +189,7 @@ const Dashboard = () => {
     }
 
     try {
-      const res = await fetch(apiUrl + '/api/payslips/', {
+      const res = await fetch('/api/payslips/', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -206,7 +205,7 @@ const Dashboard = () => {
     const name = formatMonthYear(contributionMonthYear);
     const NRIC = employee.NRIC;
 
-    const res = await fetch(apiUrl + `/api/payslips/name/${name}/${NRIC}`);
+    const res = await fetch(`/api/payslips/name/${name}/${NRIC}`);
     const data = await res.json();
 
     if (data) {
@@ -230,7 +229,7 @@ const Dashboard = () => {
         companyName: companyName
       }
   
-      const send = await fetch(apiUrl + `/api/payslips/${data.id}`, {
+      const send = await fetch(`/api/payslips/${data.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

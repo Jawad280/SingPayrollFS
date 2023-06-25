@@ -9,12 +9,11 @@ import Image from 'next/image';
 const EmployeeTable = () => {
 
   const session = useSession();
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const companyName = session.data.user.name.companyName;
     // fetch employees
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-  const { data, error, isLoading } = useSWR(apiUrl + `/api/employees/companyName/${companyName}`, fetcher);
+  const { data, error, isLoading } = useSWR(`/api/employees/companyName/${companyName}`, fetcher);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -26,7 +25,7 @@ const EmployeeTable = () => {
 
   const handleDelete = async(employeeId) => {
     try {
-        const res = await fetch(apiUrl + `/api/employees/${employeeId}`, {
+        const res = await fetch(`/api/employees/${employeeId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

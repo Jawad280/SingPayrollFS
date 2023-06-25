@@ -13,12 +13,10 @@ const PayslipListOfMonthYear = ({params}) => {
     const monthYear = params.monthYear;
     const [clicked, setClicked] = useState(false);
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
   // fetch employees
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-  const { data, error, isLoading } = useSWR(apiUrl + `/api/payslips/company/${companyName}/monthYear/${monthYear}`, fetcher);
+  const { data, error, isLoading } = useSWR(`/api/payslips/company/${companyName}/monthYear/${monthYear}`, fetcher);
 
   if (isLoading) {
     return <div>Loading...</div>;
