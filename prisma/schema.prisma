@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(uuid())
+  username    String
+  companyName String    @unique
+  password    String
+  isAdmin     Boolean?
+  license     DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model Employee {
+  id                     String    @id @default(uuid())
+  name                   String
+  NRIC                   String
+  dateOfBirth            DateTime
+  nationality            String
+  basicPay               String
+  allowance              String
+  additionalPay          String
+  otPay                  String
+  otHours                String
+  modeOfPayment          String
+  citizenshipStatus      String?
+  typeOfContributionRate String?
+  isResigned             Boolean?
+  joinDate               DateTime?
+  resignDate             DateTime?
+  designation            String?
+  companyName            String?
+  createdAt              DateTime  @default(now())
+}
+
+model Payslip {
+  id                    String   @id @default(uuid())
+  name                  String
+  employeeRef           String
+  companyName           String?
+  contributionMonthYear DateTime
+  dateOfPayment         DateTime
+  employeeName          String
+  dateOfBirth           DateTime
+  citizenshipStatus     String?
+  NRIC                  String
+  basicPay              String
+  allowance             String
+  additionalPay         String
+  otPay                 String
+  otHours               String
+  modeOfPayment         String
+  isResigned            Boolean?
+  employeeShare         String?
+  employerShare         String?
+  designation           String?
+  createdAt             DateTime @default(now())
+}
+
+model Year {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+}
