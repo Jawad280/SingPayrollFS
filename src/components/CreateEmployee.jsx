@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
 const CreateEmployee = () => {
+    const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
     const [name, setName] = useState('');
     const [NRIC, setNRIC] = useState('')
@@ -60,7 +61,7 @@ const CreateEmployee = () => {
         }
 
         try {
-            const res = await fetch('/api/employees', {
+            const res = await fetch(`${apiUrl}/api/employees`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

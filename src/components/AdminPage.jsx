@@ -8,8 +8,9 @@ import Link from 'next/link';
 const AdminPage = () => {
 
     const fetcher = (...args) => fetch(...args).then((res) => res.json());
+    const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
-    const { data, error, isLoading } = useSWR(`/api/users`, fetcher);
+    const { data, error, isLoading } = useSWR(`${apiUrl}/api/users`, fetcher);
   
     if (isLoading) {
       return <div>Loading...</div>;

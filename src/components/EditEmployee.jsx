@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 const EditEmployee = ({employeeId}) => {
+    const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
     const [name, setName] = useState('');
     const [NRIC, setNRIC] = useState('')
     const [dateOfBirth, setDateOfBirth] = useState('');
@@ -32,7 +34,7 @@ const EditEmployee = ({employeeId}) => {
     // fetch employee
     const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-    const { data, error, isLoading } = useSWR(`/api/employees/${employeeId}`, fetcher);
+    const { data, error, isLoading } = useSWR(`${apiUrl}/api/employees/${employeeId}`, fetcher);
 
     if (isLoading) {
       return <div>Loading...</div>;
@@ -82,7 +84,7 @@ const EditEmployee = ({employeeId}) => {
         }
         console.log(updatedEmployee);
 
-        fetch(`/api/employees/${employeeId}`, {
+        fetch(`${apiUrl}/api/employees/${employeeId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

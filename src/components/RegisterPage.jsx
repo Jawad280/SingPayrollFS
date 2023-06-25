@@ -6,6 +6,8 @@ import { Button, Label, TextInput } from 'flowbite-react';
 
 const RegisterPage = ({setClicked}) => {
 
+    const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [companyName, setCompanyName] = useState('');
@@ -20,7 +22,7 @@ const RegisterPage = ({setClicked}) => {
         const newUser = {username, companyName, password, isAdmin: false, license: license};
 
         try {
-            const res = await fetch("/api/users/", {
+            const res = await fetch(`${apiUrl}/api/users/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
