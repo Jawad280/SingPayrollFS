@@ -13,7 +13,9 @@ const handler = NextAuth({
           console.log("authorize function invoked");
           try {
 
-            const res = await fetch( apiUrl + `/api/users/username/` + credentials.username);
+            const res = await fetch(apiUrl+ `/api/users/username/${credentials.username}`, {
+              method: 'GET'
+            });
 
             const user = await res.json();
 
