@@ -3,7 +3,6 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button, Label, TextInput } from 'flowbite-react';
-import Link from 'next/link';
 
 export default function Home() {
 
