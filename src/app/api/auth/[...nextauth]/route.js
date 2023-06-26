@@ -13,9 +13,10 @@ const handler = NextAuth({
           console.log("authorize function invoked");
           try {
 
-            const res = await fetch(`${apiUrl}/api/users/username/${credentials.username}`);
-  
+            const res = await fetch( apiUrl + `/api/users/username/${credentials.username}`);
+            console.log(`${apiUrl}/api/users/username/${credentials.username}`)
             const user = await res.json();
+
             if (user) {
               // check password
               const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password);
