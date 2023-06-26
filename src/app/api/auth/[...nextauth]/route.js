@@ -19,13 +19,13 @@ const handler = NextAuth({
 
             const user = await res.json();
 
-            if (user) {
+            if (user && user.id && user.password) {
               // check password
               const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password);
   
               if (isPasswordCorrect) {
                 return {
-                  id: user._id,
+                  id: user.id,
                   name: user
                 }
               } else {
