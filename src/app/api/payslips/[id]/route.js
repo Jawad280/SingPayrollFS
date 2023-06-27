@@ -1,5 +1,6 @@
 import { prisma } from "../../../../../lib/prisma";
 import { NextResponse } from "next/server";
+import { parseISO } from "date-fns";
 
 // GET payslip by ID 
 export async function GET(req, {params}) {
@@ -32,11 +33,27 @@ export async function PATCH(req, { params }) {
     const id = params.id;
     const inputs = await req.json();
 
+    const {
+        contributionMonthYear: cmyString,
+        dateOfPayment: dateOfPaymentString,
+        dateOfBirth: dobString,
+        ...payslipData
+    } = inputs;
+
+    const contributionMonthYear = cmyString ? parseISO(cmyString) : null;
+    const dateOfPayment = dateOfPaymentString ? parseISO(dateOfPaymentString) : null;
+    const dateOfBirth = dobString ? parseISO(dobString) : null;
+
     const updatedPayslip = await prisma.payslip.update({
         where: {
             id: id
         },
-        data: inputs
+        data: {
+            ...payslipData,
+            contributionMonthYear: contributionMonthYear,
+            dateOfPayment: dateOfPayment,
+            dateOfBirth: dateOfBirth
+        }
     });
 
     return NextResponse.json(updatedPayslip);

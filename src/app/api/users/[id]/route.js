@@ -1,5 +1,6 @@
 import { prisma } from "../../../../../lib/prisma";
 import { NextResponse } from "next/server";
+import { parseISO } from "date-fns";
 
 // GET user by ID 
 export async function GET(req, {params}) {
@@ -32,11 +33,17 @@ export async function PATCH(req, { params }) {
     const id = params.id;
     const inputs = await req.json();
 
+    const { license: licenseString, ...userData } = inputs;
+    const license = licenseString ? parseISO(licenseString) : null;
+
     const updatedUser = await prisma.user.update({
         where: {
             id: id
         },
-        data: inputs
+        data: {
+            ...userData,
+            license: license
+        }
     });
 
     return NextResponse.json(updatedUser);

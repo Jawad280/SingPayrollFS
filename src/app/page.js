@@ -32,7 +32,7 @@ export default function Home() {
     const daysLeft = Math.round(timeDiff / oneDayMs);
   
     // Check if the date is less than one month away (30 days)
-    const isLessThanOneMonth = daysLeft < 30;
+    const isLessThanOneMonth = (daysLeft < 30) && (daysLeft >= 0);
   
     return [
       isLessThanOneMonth,
@@ -56,7 +56,7 @@ export default function Home() {
   
     const [isLessThanOneMonth, daysLeft] = oneMonthWarning(license);
   
-    if (isLessThanOneMonth) {
+    if (isLessThanOneMonth && !(session.data.user?.name?.isAdmin)) {
       alert("Your license expires in " + daysLeft + " days");
       router?.push("/dashboard");
     }
@@ -64,6 +64,7 @@ export default function Home() {
     if (session.data.user?.name?.isAdmin || checkDate(license)) {
       router?.push("/dashboard");
     } else {
+      alert("Your license has expired!");
       signOut();
     }
   }

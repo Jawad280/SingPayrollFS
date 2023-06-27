@@ -20,6 +20,22 @@ const AdminPage = () => {
       return <div>Error: {error.message}</div>;
     }
 
+    const handleDelete = async (userId) => {
+        try {
+            const res = await fetch(`${apiUrl}/api/users/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log(res.status);
+            res.status === 200;
+            mutate('/api/users');
+        } catch(error) {
+            console.log(error);
+        }
+    }
+
   return (
     <div className="box-border w-full">
         <Table>
@@ -42,6 +58,12 @@ const AdminPage = () => {
                     </span>
                 </Table.HeadCell>
 
+                <Table.HeadCell>
+                    <span className="sr-only">
+                        Delete
+                    </span>
+                </Table.HeadCell>
+
             </Table.Head>
 
             <Table.Body>
@@ -54,6 +76,11 @@ const AdminPage = () => {
                             <Link href={`/dashboard/edit-company/${item.id}`}>
                                 <Image src="/pencil-square.svg" alt="Edit" height={16} width={16} />
                             </Link>
+                        </Table.Cell>
+                        <Table.Cell>
+                            <div className="cursor-pointer" onClick={() => handleDelete(item.id)}>
+                                <Image src="/trash.svg" alt='Delete' height={16} width={16} />
+                            </div>
                         </Table.Cell>
                     </Table.Row>
                 ))}
