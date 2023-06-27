@@ -11,7 +11,6 @@ export default function Home() {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [clicked, setClicked] = useState(false);
 
   const checkDate = (date) => {
     const currentDate = new Date();
@@ -41,11 +40,9 @@ export default function Home() {
     ];    
   }
 
-  const [err, setErr] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(username, password)
     signIn("credentials", { username, password });
   }
 
@@ -64,7 +61,7 @@ export default function Home() {
       router?.push("/dashboard");
     }
   
-    if (checkDate(license) || session.data.user?.name?.isAdmin) {
+    if (session.data.user?.name?.isAdmin || checkDate(license)) {
       router?.push("/dashboard");
     } else {
       signOut();

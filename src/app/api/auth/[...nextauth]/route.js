@@ -33,7 +33,7 @@ const handler = NextAuth({
               }
   
             } else {
-              throw new Error("User not found");
+              throw new Error(`User : ${user.username} not found`);
             }
   
           } catch (error) {
