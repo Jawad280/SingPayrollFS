@@ -1,14 +1,4 @@
-// import puppeteer from "puppeteer";
-
-let chrome = {};
-let puppeteer;
-
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-    chrome = require('chrome-aws-lambda');
-    puppeteer = require('puppeteer-core');
-} else {
-    puppeteer = require('puppeteer');
-}
+import puppeteer from "puppeteer";
 
 const url = "https://www.cpf.gov.sg/employer/tools-and-services/calculators/cpf-contribution-calculator";
 
@@ -174,21 +164,9 @@ const second = async (page, employee, cmy) => {
 
 }
 
-let options = {};
-
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-    options = {
-        args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
-        defaultViewport: chrome.defaultViewport,
-        executablePath: await chrome.executablePath,
-        headless: true,
-        ignoreHTTPSErrors: true
-    };
-}
-
 const extractData = async (employee, contributionMonthYear) => {
     const cmy = formatDate(contributionMonthYear);
-    const browser = await puppeteer.launch(options);
+    const browser = await puppeteer.launch();
 
     const page = await browser.newPage();
     await page.goto(url);
