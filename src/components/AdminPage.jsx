@@ -4,11 +4,15 @@ import useSWR, { mutate } from 'swr';
 import { Table } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import Popup from './Popup';
 
 const AdminPage = () => {
 
     const fetcher = (...args) => fetch(...args).then((res) => res.json());
     const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
+    const [open, setOpen] = useState(false);
+    const [userId, setUserId] = useState('');
 
     const { data, error, isLoading } = useSWR(`${apiUrl}/api/users`, fetcher);
   
@@ -20,20 +24,23 @@ const AdminPage = () => {
       return <div>Error: {error.message}</div>;
     }
 
-    const handleDelete = async (userId) => {
-        try {
-            const res = await fetch(`${apiUrl}/api/users/${userId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            console.log(res.status);
-            res.status === 200;
-            mutate('/api/users');
-        } catch(error) {
-            console.log(error);
+    const handleDelete = async (canDelete) => {
+        if (canDelete) {
+            try {
+                const res = await fetch(`${apiUrl}/api/users/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                console.log(res.status);
+                res.status === 200;
+                mutate(`${apiUrl}/api/users`);
+            } catch(error) {
+                console.log(error);
+            }
         }
+
     }
 
   return (
@@ -78,14 +85,22 @@ const AdminPage = () => {
                             </Link>
                         </Table.Cell>
                         <Table.Cell>
-                            <div className="cursor-pointer" onClick={() => handleDelete(item.id)}>
-                                <Image src="/trash.svg" alt='Delete' height={16} width={16} />
+                            <div onClick={() => {
+                                setOpen(true)
+                                setUserId(item.id)
+                            }} className="cursor-pointer">
+                                <Image src="/trash.svg" alt="Edit" height={16} width={16} />
                             </div>
                         </Table.Cell>
                     </Table.Row>
                 ))}
             </Table.Body>
         </Table>
+
+        {
+            open && 
+            <Popup label={"Are you sure you want to delete this user ?"} setOpen={setOpen} fn={handleDelete}/>
+        }
     </div>
   )
 }
