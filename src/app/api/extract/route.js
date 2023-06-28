@@ -6,7 +6,7 @@ import extractData from "./extractData";
 export async function POST(req) {
     const inputs = await req.json();
 
-    const { employee, cmy } = await inputs;
+    const { employee, cmy } = inputs;
 
     const output = await extractData(employee, cmy);    
     

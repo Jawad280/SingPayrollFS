@@ -265,10 +265,10 @@ const Dashboard = () => {
 
     console.log({cmy, dateOfPayment});
 
-    Promise.all(employeeList.map(async (x, i) => {
-      if (!x.isResigned) {
+    Promise.all(employeeList.map(async (x) => {
+      if (!x?.isResigned) {
         
-        if (x.nationality != "Foreigner") {
+        if (x?.nationality != "Foreigner") {
           await getCPF(x, cmy)
           .then((CPFvalues) => {
             const employeeShare = CPFvalues[1];
@@ -279,28 +279,8 @@ const Dashboard = () => {
             console.log("Payslip is being generated ..............")
             checker(employeeShare, employerShare, x, cmy);
           })
-          // .finally(() => {
-          //   console.log(employeeList.length, i);
-
-          //   if (employeeList.length === i+1) {
-          //     setIsFetched(true);
-          //   }
-          // })
-
         } else {
-
           await foreignChecker(x,cmy)
-          // .then(() => {
-          //   // push(`/dashboard/payslip-list/${nav}`)
-          //   payslipList.push(`/dashboard/payslip-list/${nav}`)
-          // // })
-          // .finally(() => {
-          //   console.log(employeeList.length, i);
-
-          //   if (employeeList.length === i+1) {
-          //     setIsFetched(true);
-          //   }
-          // })
         }  
 
       } else {
