@@ -14,6 +14,15 @@ const EditCompany = ({companyId}) => {
     const { push } = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
     // fetch company
     const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -106,7 +115,7 @@ const EditCompany = ({companyId}) => {
                     id="license"
                     placeholder="Choose License Expiry Date"
                     type="date"
-                    defaultValue={data.license}
+                    defaultValue={formatDate(data.license)}
                     onChange={(e) => setLicense(e.target.value)}
                     />
                 </div>

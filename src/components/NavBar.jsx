@@ -45,7 +45,11 @@ const NavBar = () => {
   return (
     <div className='flex justify-between p-4 box-border w-full mb-6 items-center bg-white print:hidden border-b border-b-sky-100'>
       <div className='flex gap-6 items-center'>
-        <div><Link href="/dashboard/" className='text-cyan-800'>LOGO</Link></div>
+          <div>
+            <Link href="/dashboard/" className='text-cyan-800'>
+              <Image src="/payroll.png" alt="Logo" height={125} width={125}/>
+            </Link>
+          </div>
         <div className='font-bold text-[18px]'>{companyName}</div>
       </div>
 

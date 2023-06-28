@@ -5,6 +5,7 @@ import useSWR from 'swr';
 import Link from 'next/link';
 import AllPayslips from '@/components/AllPayslips';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 
 const PayslipListOfMonthYear = ({params}) => {
 
@@ -61,19 +62,19 @@ const PayslipListOfMonthYear = ({params}) => {
             <div className="box-border w-full relative">
                 <AllPayslips monthYear={monthYear} companyName={companyName}/>
                 
-                <Button 
+                <div 
                     onClick={() => setClicked(false)}
-                    className="absolute top-8 left-[250px]"
-                    >
-                        Go Back
-                </Button>
-
-                <Button 
-                    onClick={() => window.print()}
-                    className="absolute top-8 right-[250px]"
+                    className="hover:bg-cyan-100 rounded-full p-4 flex items-center justify-center cursor-pointer absolute top-8 left-[250px]"
                 >
-                    Print
-                </Button>
+                    <Image src="/arrow-left-circle.svg" alt="print" width={30} height={30}/>
+                </div>
+
+                <div 
+                    onClick={() => window.print()}
+                    className="hover:bg-cyan-100 rounded-full p-4 flex items-center justify-center cursor-pointer absolute top-8 right-[250px]"
+                >
+                    <Image src="/printer.svg" alt="print" width={30} height={30}/>
+                </div>
             </div>
         )
     }
@@ -129,14 +130,14 @@ const PayslipListOfMonthYear = ({params}) => {
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{index+1}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{test.employeeName}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{test.NRIC}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{new Date(test.dateOfBirth).toLocaleDateString()}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{new Date(test.dateOfBirth).toLocaleDateString('en-GB')}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{test.designation}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">${grossPay(test)}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{test.employeeShare}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{test.employerShare}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         <Link href={`/dashboard/payslip/${test.id}`}>
-                            View
+                            <Image src="/pencil-square.svg" alt="Edit" height={16} width={16} />
                         </Link>
                     </Table.Cell>
                 </Table.Row>

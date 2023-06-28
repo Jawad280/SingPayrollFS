@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Label, TextInput, Radio } from 'flowbite-react';
 import useSWR from 'swr';
 import Link from 'next/link';
@@ -8,26 +8,28 @@ import { useRouter } from 'next/navigation';
 const EditEmployee = ({employeeId}) => {
     const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
     const [name, setName] = useState('');
     const [NRIC, setNRIC] = useState('')
     const [dateOfBirth, setDateOfBirth] = useState('');
-    const [citizenshipStatus, setCitizenshipStatus] = useState('');
+
     const [basicPay, setBasicPay] = useState('');
     const [allowance, setAllowance] = useState('');
     const [additionalPay, setAdditionalPay] = useState('');
     const [otHours, setOtHours] = useState('');
     const [otPay, setOtPay] = useState('');
-    const [modeOfPayment, setModeOfPayment] = useState('');
-    const [isResigned, setIsResigned] = useState('');
-
-    const [nationality, setNationality] = useState('');
-    const [typeOfContribution, setTypeOfContribution] = useState('');
 
     const [joinDate, setJoinDate] = useState('');
     const [designation, setDesignation] = useState('');
     const [resignDate, setResignDate] = useState('');
-
-    const [showResignation, setShowResignation] = useState(isResigned);
 
     const { push } = useRouter();
 
@@ -35,6 +37,13 @@ const EditEmployee = ({employeeId}) => {
     const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
     const { data, error, isLoading } = useSWR(`${apiUrl}/api/employees/${employeeId}`, fetcher);
+    
+    const [ nationality, setNationality ] = useState(data?.nationality);
+    const [citizenshipStatus, setCitizenshipStatus] = useState(data?.citizenshipStatus);
+    const [typeOfContribution, setTypeOfContribution] = useState(data?.typeOfContribution);
+    const [modeOfPayment, setModeOfPayment] = useState(data?.modeOfPayment);
+    const [isResigned, setIsResigned] = useState(data?.isResigned);
+    const [showResignation, setShowResignation] = useState(isResigned);
 
     if (isLoading) {
       return <div>Loading...</div>;
@@ -78,9 +87,9 @@ const EditEmployee = ({employeeId}) => {
             isResigned: capturedResigned,
             nationality: capturedNationality,
             typeOfContribution: capturedTypeOfContribution,
-            capturedJoinDate: capturedJoinDate,
-            capturedDesignation: capturedDesignation,
-            capturedResignDate: capturedResignDate
+            joinDate: capturedJoinDate,
+            designation: capturedDesignation,
+            resignDate: capturedResignDate
         }
         console.log(updatedEmployee);
 
@@ -102,7 +111,6 @@ const EditEmployee = ({employeeId}) => {
                 push('/dashboard/employee-list');
             })
     }
-
 
   return (
     <div className="box-border w-full flex flex-col items-center mb-16">
@@ -148,8 +156,8 @@ const EditEmployee = ({employeeId}) => {
                                     id="SC/PR"
                                     name="nationality"
                                     value="Singapore Citizen/Permanent Resident"
-                                    checked={data.nationality === "Singapore Citizen/Permanent Resident"}
                                     onChange={(e) => setNationality(e.target.value)}
+                                    checked={nationality === "Singapore Citizen/Permanent Resident"}
                                 />
                                 <Label htmlFor="SC/PR">
                                     Singapore Citizen/Permanent Resident
@@ -161,8 +169,12 @@ const EditEmployee = ({employeeId}) => {
                                     id="foreigner"
                                     name="nationality"
                                     value="Foreigner"
-                                    checked={data.nationality === "Foreigner"}
-                                    onChange={(e) => setNationality(e.target.value)}
+                                    onChange={(e) => {
+                                        setTypeOfContribution(null)
+                                        setCitizenshipStatus(null)
+                                        setNationality(e.target.value)
+                                    }}
+                                    checked={nationality === "Foreigner"}
                                 />
                                 <Label htmlFor="foreigner">
                                     Foreigner
@@ -177,7 +189,7 @@ const EditEmployee = ({employeeId}) => {
                         </div>
                         <TextInput
                             type='date'
-                            value={data.dateOfBirth.substring(0, 10)}
+                            value={dateOfBirth || formatDate(data.dateOfBirth)}
                             onChange={(e) => setDateOfBirth(e.target.value)}
                             required
                         />
@@ -198,8 +210,11 @@ const EditEmployee = ({employeeId}) => {
                                         id="sc/3rdPR"
                                         name="citizenshipStatus"
                                         value="SC/3rdPR"
-                                        checked={data.citizenshipStatus === "SC/3rdPR"}
-                                        onChange={(e) => setCitizenshipStatus(e.target.value)}
+                                        checked={citizenshipStatus === "SC/3rdPR"}
+                                        onChange={(e) => {
+                                            setTypeOfContribution(null)
+                                            setCitizenshipStatus(e.target.value)
+                                        }}
                                     />
                                     <Label htmlFor="sc/3rdPR">
                                         Singapore Citizen/3rd Year Permanent Resident and above
@@ -211,7 +226,7 @@ const EditEmployee = ({employeeId}) => {
                                         id="1stPR"
                                         name="citizenshipStatus"
                                         value="1stPR"
-                                        checked={data.citizenshipStatus === "1stPR"}
+                                        checked={citizenshipStatus === "1stPR"}
                                         onChange={(e) => setCitizenshipStatus(e.target.value)}
                                     />
                                     <Label htmlFor="1stPR">
@@ -224,7 +239,7 @@ const EditEmployee = ({employeeId}) => {
                                         id="2ndPR"
                                         name="citizenshipStatus"
                                         value="2ndPR"
-                                        checked={data.citizenshipStatus === "2ndPR"}
+                                        checked={citizenshipStatus === "2ndPR"}
                                         onChange={(e) => setCitizenshipStatus(e.target.value)}
                                     />
                                     <Label htmlFor="2ndPR">
@@ -235,7 +250,7 @@ const EditEmployee = ({employeeId}) => {
                         </div>
                     )}
 
-                    {((citizenshipStatus || data.citizenshipStatus) === "2ndPR" || (citizenshipStatus || data.citizenshipStatus) === "1stPR") && (
+                    {((citizenshipStatus) === "2ndPR" || (citizenshipStatus) === "1stPR") && (nationality != "Foreigner") && (
                         <div>
                             <fieldset
                                 className="flex max-w-md gap-4"
@@ -250,7 +265,7 @@ const EditEmployee = ({employeeId}) => {
                                         id="G/G"
                                         name="typeOfContributionRates"
                                         value="G/G"
-                                        checked={data.typeOfContribution == "G/G"}
+                                        checked={typeOfContribution == "G/G"}
                                         onChange={(e) => setTypeOfContribution(e.target.value)}
                                     />
                                     <Label htmlFor="G/G" className='flex flex-col gap-1'>
@@ -264,7 +279,7 @@ const EditEmployee = ({employeeId}) => {
                                         id="F/G"
                                         name="typeOfContributionRates"
                                         value="F/G"
-                                        checked={data.typeOfContribution == "F/G"}
+                                        checked={typeOfContribution == "F/G"}
                                         onChange={(e) => setTypeOfContribution(e.target.value)}
                                     />
                                     <Label htmlFor="F/G" className='flex flex-col gap-1'>
@@ -278,7 +293,7 @@ const EditEmployee = ({employeeId}) => {
                                         id="F/F"
                                         name="typeOfContributionRates"
                                         value="F/F"
-                                        checked={data.typeOfContribution == "F/F"}
+                                        checked={typeOfContribution == "F/F"}
                                         onChange={(e) => setTypeOfContribution(e.target.value)}
                                     />
                                     <Label htmlFor="F/F" className='flex flex-col gap-1'>
@@ -329,7 +344,7 @@ const EditEmployee = ({employeeId}) => {
                                     id="cash"
                                     name="modeOfPayment"
                                     value="Cash"
-                                    checked={data.modeOfPayment === "Cash"}
+                                    checked={modeOfPayment === "Cash"}
                                     onChange={(e) => setModeOfPayment(e.target.value)}
                                 />
                                 <Label htmlFor="cash">
@@ -342,7 +357,7 @@ const EditEmployee = ({employeeId}) => {
                                     id="cheque"
                                     name="modeOfPayment"
                                     value="Cheque"
-                                    checked={data.modeOfPayment === "Cheque"}
+                                    checked={modeOfPayment === "Cheque"}
                                     onChange={(e) => setModeOfPayment(e.target.value)}
                                 />
                                 <Label htmlFor="cheque">
@@ -355,7 +370,7 @@ const EditEmployee = ({employeeId}) => {
                                     id="bankDeposit"
                                     name="modeOfPayment"
                                     value="Bank Deposit"
-                                    checked={data.modeOfPayment === "Bank Deposit"}
+                                    checked={modeOfPayment === "Bank Deposit"}
                                     onChange={(e) => setModeOfPayment(e.target.value)}
                                 />
                                 <Label htmlFor="bankDeposit">
@@ -374,7 +389,7 @@ const EditEmployee = ({employeeId}) => {
                         </div>
                         <TextInput
                             type='date'
-                            value={data.joinDate.substring(0, 10)}
+                            value={joinDate || formatDate(data.joinDate)}
                             onChange={(e) => setJoinDate(e.target.value)}
                         />
                     </div>
@@ -440,7 +455,7 @@ const EditEmployee = ({employeeId}) => {
                                     id="active"
                                     name="isResigned"
                                     value="false"
-                                    checked={!data.isResigned}
+                                    checked={!isResigned}
                                     onChange={(e) => {
                                         setIsResigned(e.target.value)
                                         setShowResignation(false)
@@ -456,7 +471,7 @@ const EditEmployee = ({employeeId}) => {
                                     id="resigned"
                                     name="isResigned"
                                     value="true"
-                                    checked={data.isResigned}
+                                    checked={isResigned}
                                     onChange={(e) => {
                                         setIsResigned(e.target.value)
                                         setShowResignation(true)

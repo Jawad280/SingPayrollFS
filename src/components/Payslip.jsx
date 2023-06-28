@@ -66,9 +66,9 @@ const Payslip = ({payslipData}) => {
     }
 
   return (
-    <div className="h-[14.85cm] w-full flex items-center py-10 box-border">
+    <div className="h-[14.85cm] w-full flex items-center py-12 box-border">
 
-        <div className='flex flex-col gap-5 h-full w-[10.5cm] pl-10 pr-5'>
+        <div className='flex flex-col gap-5 h-full w-[10.5cm] pl-12 pr-2'>
             <div className="font-bold text-[24px] h-[45px]">
                 Itemised Payslip
             </div>
@@ -134,10 +134,9 @@ const Payslip = ({payslipData}) => {
                     </tr>
 
                     <tr className='border-b border-gray-400'>
-                        <div className='p-2'>
-                            Other
-                        </div>
-                        
+                        <td className="p-2 border-r border-gray-400 text-left" colSpan="2">
+                            Other : {payslipData.other}
+                        </td>
                     </tr>
 
                 </tbody>
@@ -145,7 +144,7 @@ const Payslip = ({payslipData}) => {
 
         </div>
 
-        <div className='flex flex-col gap-5 h-full w-[10.5cm] pl-5 pr-10'>
+        <div className='flex flex-col gap-5 h-full w-[10.5cm] pl-2 pr-12'>
             <div className='flex flex-col items-start h-[45px]'>
                 <div className='font-semibold text-[14px]'>For the Period</div>
                 <div className='text-[12px]'>{fromToDate(payslipData.contributionMonthYear)}</div>
@@ -215,7 +214,7 @@ const Payslip = ({payslipData}) => {
                     <tr className='border-b border-gray-400'>
                         <td className="p-2 border-r border-gray-400">Net Pay (C-D+E+F)</td>
                         <td className='text-right p-2 font-bold'>
-                            ${payslipData.citizenshipStatus === "" ? netPayGenForeigner() : netPayGen()}
+                            ${payslipData.netPay || (payslipData.citizenshipStatus === "" ? netPayGenForeigner() : netPayGen())}
                         </td>
                     </tr>
 

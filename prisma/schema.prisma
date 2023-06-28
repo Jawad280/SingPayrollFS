@@ -64,6 +64,8 @@ model Payslip {
   employerShare         String?
   designation           String?
   createdAt             DateTime @default(now())
+  other                 String?
+  netPay                String?
 }
 
 model Year {
