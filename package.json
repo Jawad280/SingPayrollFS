@@ -16,7 +16,6 @@
     "@types/react-dom": "18.2.5",
     "autoprefixer": "10.4.14",
     "bcryptjs": "^2.4.3",
-    "chrome-aws-lambda": "^10.1.0",
     "date-fns": "^2.30.0",
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.5",
@@ -24,7 +23,7 @@
     "flowbite-react": "^0.4.7",
     "next": "13.4.5",
     "next-auth": "^4.22.1",
-    "playwright-core": "^1.35.1",
+    "puppeteer": "^20.6.0",
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -34,8 +33,7 @@
   },
   "devDependencies": {
     "prisma": "^4.16.1",
-    "ts-node": "^10.9.1",
-    "puppeteer": "^20.6.0"
+    "ts-node": "^10.9.1"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
