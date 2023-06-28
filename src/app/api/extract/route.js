@@ -10,5 +10,5 @@ export async function POST(req) {
 
     const output = await extractData(employee, cmy);    
     
-    return NextResponse.json(output);
+    return new NextResponse(JSON.stringify(output), { status: 201 });
 }
