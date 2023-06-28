@@ -62,11 +62,12 @@ const Dashboard = () => {
   }
 
   const employeeList = data;
-
+  // `${apiUrl}/api/extract/`
+  
   const getCPF = async (employee, cmy) => {
     try {
       console.log("CPF is being generated ..............")
-      const res = await fetch(`${apiUrl}/api/extract/`, {
+      const res = await fetch("https://singpayroll-cpf.onrender.com/api/extract", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
