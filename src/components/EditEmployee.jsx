@@ -459,10 +459,10 @@ const EditEmployee = ({employeeId}) => {
                                 <Radio
                                     id="active"
                                     name="isResigned"
-                                    value="false"
+                                    value={false}
                                     checked={!isResigned}
                                     onChange={(e) => {
-                                        setIsResigned(e.target.value)
+                                        setIsResigned(false)
                                         setShowResignation(false)
                                     }}
                                 />
@@ -475,10 +475,10 @@ const EditEmployee = ({employeeId}) => {
                                 <Radio
                                     id="resigned"
                                     name="isResigned"
-                                    value="true"
+                                    value={true}
                                     checked={isResigned}
                                     onChange={(e) => {
-                                        setIsResigned(e.target.value)
+                                        setIsResigned(true)
                                         setShowResignation(true)
                                     }}
                                 />

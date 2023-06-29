@@ -25,9 +25,6 @@ const CreateEmployee = () => {
 
     const [joinDate, setJoinDate] = useState('');
     const [designation, setDesignation] = useState('');
-    const [resignDate, setResignDate] = useState('');
-
-    const [showResignation, setShowResignation] = useState(isResigned);
 
     const { push } = useRouter();
     const session = useSession();
@@ -56,7 +53,7 @@ const CreateEmployee = () => {
             typeOfContributionRate: typeOfContribution,
             joinDate: joinDate,
             designation: designation,
-            resignDate: resignDate,
+            resignDate: null,
             companyName: companyName
         }
 

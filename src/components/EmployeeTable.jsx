@@ -86,6 +86,10 @@ const EmployeeTable = () => {
                 </Table.HeadCell>
 
                 <Table.HeadCell>
+                    Resign Date
+                </Table.HeadCell>
+
+                <Table.HeadCell>
                     <span className="sr-only">
                     Edit
                     </span>
@@ -110,6 +114,11 @@ const EmployeeTable = () => {
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{x.designation}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{new Date(x.joinDate).toLocaleDateString('en-GB')}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{x.isResigned ? "Resigned" : "Active"}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {
+                            x.resignDate ? new Date(x.resignDate).toLocaleDateString('en-GB') : "NIL"
+                        }
+                    </Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         <Link href={`/dashboard/employee-list/${x.id}`} >
                             <Image src="/pencil-square.svg" alt="Edit" height={16} width={16} />
