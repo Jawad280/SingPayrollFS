@@ -71,12 +71,12 @@ const EditEmployee = ({employeeId}) => {
         const capturedOtHours = otHours || data.otHours;
         const capturedOtPay = otPay || data.otPay;
         const capturedModeOfPayment = modeOfPayment || data.modeOfPayment;
-        const capturedResigned = isResigned || data.isResigned;
+        const capturedResigned = isResigned;
         const capturedNationality = nationality || data.nationality;
         const capturedTypeOfContribution = typeOfContribution || data.typeOfContribution;
         const capturedJoinDate = joinDate || data.joinDate;
         const capturedDesignation = designation || data.designation;
-        const capturedResignDate = resignDate || data.resignDate;
+        const capturedResignDate = resignDate;
 
         const updatedEmployee = {
             name: capturedName,
@@ -464,6 +464,7 @@ const EditEmployee = ({employeeId}) => {
                                     onChange={(e) => {
                                         setIsResigned(false)
                                         setShowResignation(false)
+                                        setResignDate(null)
                                     }}
                                 />
                                 <Label htmlFor="active">

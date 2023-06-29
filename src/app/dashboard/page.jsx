@@ -134,52 +134,55 @@ const Dashboard = () => {
   }
 
   const checker = async (employeeShare, employerShare, employee, contributionMonthYear) => {
-
     const name = formatMonthYear(contributionMonthYear);
     const NRIC = employee.NRIC;
     console.log("Checker activated", name, NRIC);
     
-
     const res = await fetch(`${apiUrl}/api/payslips/name/${name}/${NRIC}`);
     const data = await res.json();
     console.log(data);
     
     if (data) {
-      const updatedPayslip = {
-        name: data.name,
-        employeeRef: data.employeeRef,
-        contributionMonthYear: contributionMonthYear,
-        dateOfPayment: dateOfPayment,
-        employeeName: employee.name,
-        dateOfBirth: employee.dateOfBirth,
-        citizenshipStatus: employee.citizenshipStatus,
-        NRIC: employee.NRIC,
-        basicPay: parseFloat(employee.basicPay).toFixed(2),
-        allowance: parseFloat(employee.allowance).toFixed(2),
-        additionalPay: parseFloat(employee.additionalPay).toFixed(2),
-        otPay: parseFloat(employee.otPay).toFixed(2),
-        otHours: employee.otHours,
-        modeOfPayment: employee.modeOfPayment,
-        isResigned: employee.isResigned,
-        employeeShare: employeeShare,
-        employerShare: employerShare,
-        designation: employee.designation
+      if (data.isFinal) {
+        alert("Payslips have been finalised for the chosen month, no more edits can occur !")
+        console.log("Payslips have been finalised, no more edits can occur !")
+      } else {
+          const updatedPayslip = {
+            name: data.name,
+            employeeRef: data.employeeRef,
+            contributionMonthYear: contributionMonthYear,
+            dateOfPayment: dateOfPayment,
+            employeeName: employee.name,
+            dateOfBirth: employee.dateOfBirth,
+            citizenshipStatus: employee.citizenshipStatus,
+            NRIC: employee.NRIC,
+            basicPay: parseFloat(employee.basicPay).toFixed(2),
+            allowance: parseFloat(employee.allowance).toFixed(2),
+            additionalPay: parseFloat(employee.additionalPay).toFixed(2),
+            otPay: parseFloat(employee.otPay).toFixed(2),
+            otHours: employee.otHours,
+            modeOfPayment: employee.modeOfPayment,
+            isResigned: employee.isResigned,
+            employeeShare: employeeShare,
+            employerShare: employerShare,
+            designation: employee.designation
+          }
+      
+          const send = await fetch(`${apiUrl}/api/payslips/${data.id}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedPayslip)
+          });
+      
+          if (send.ok) {
+            console.log("Payslip Updated");
+          }
+        }
+      } else {
+        return makePayslip(employeeShare, employerShare, employee, contributionMonthYear);
       }
-  
-      const send = await fetch(`${apiUrl}/api/payslips/${data.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedPayslip)
-      });
-  
-      if (send.ok) {
-        console.log("Payslip Updated");
-      }
-    } else {
-      return makePayslip(employeeShare, employerShare, employee, contributionMonthYear);
-    }
 
   }
 
@@ -225,37 +228,43 @@ const Dashboard = () => {
     const data = await res.json();
 
     if (data) {
-      const updatedPayslip = {
-        name: data.name,
-        employeeRef: data.employeeRef,
-        contributionMonthYear: contributionMonthYear,
-        dateOfPayment: dateOfPayment,
-        employeeName: employee.name,
-        dateOfBirth: employee.dateOfBirth,
-        citizenshipStatus: employee.citizenshipStatus,
-        NRIC: employee.NRIC,
-        basicPay: parseFloat(employee.basicPay).toFixed(2),
-        allowance: parseFloat(employee.allowance).toFixed(2),
-        additionalPay: parseFloat(employee.additionalPay).toFixed(2),
-        otPay: parseFloat(employee.otPay).toFixed(2),
-        otHours: employee.otHours,
-        modeOfPayment: employee.modeOfPayment,
-        isResigned: employee.isResigned,
-        designation: employee.designation,
-        companyName: companyName
+
+      if (data.isFinal) {
+        console.log("Payslips have been finalised, no more edits can occur !")
+      } else {
+        const updatedPayslip = {
+          name: data.name,
+          employeeRef: data.employeeRef,
+          contributionMonthYear: contributionMonthYear,
+          dateOfPayment: dateOfPayment,
+          employeeName: employee.name,
+          dateOfBirth: employee.dateOfBirth,
+          citizenshipStatus: employee.citizenshipStatus,
+          NRIC: employee.NRIC,
+          basicPay: parseFloat(employee.basicPay).toFixed(2),
+          allowance: parseFloat(employee.allowance).toFixed(2),
+          additionalPay: parseFloat(employee.additionalPay).toFixed(2),
+          otPay: parseFloat(employee.otPay).toFixed(2),
+          otHours: employee.otHours,
+          modeOfPayment: employee.modeOfPayment,
+          isResigned: employee.isResigned,
+          designation: employee.designation,
+          companyName: companyName
+        }
+    
+        const send = await fetch(`${apiUrl}/api/payslips/${data.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedPayslip)
+        });
+    
+        if (send.ok) {
+          console.log("Payslip Updated");
+        }
       }
-  
-      const send = await fetch(`${apiUrl}/api/payslips/${data.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedPayslip)
-      });
-  
-      if (send.ok) {
-        console.log("Payslip Updated");
-      }
+
     } else {
       return foreignPayslip(employee, contributionMonthYear);
     }
@@ -287,37 +296,39 @@ const Dashboard = () => {
 
     console.log("Cmy and Date of Payment : " , cmy, dateOfPayment);
 
-    Promise.all(employeeList.map(async (x) => {
-      if (!x?.isResigned) {
-        
-        if (x?.nationality != "Foreigner") {
-          console.log(x)
-          setWait(true)
-          await getCPF(x, cmy)
-          .then((CPFvalues) => {
-            const employeeShare = CPFvalues[1];
-            const employerShare = CPFvalues[2];
-            return { employeeShare, employerShare }
-          })
-          .then(({ employeeShare, employerShare }) => {
-            console.log("Payslip is being generated ..............")
-            checker(employeeShare, employerShare, x, cmy);
-          })
+    try {
+      await Promise.all(employeeList.map(async (x) => {
+        if (!x?.isResigned) {
+          
+          if (x?.nationality != "Foreigner") {
+            console.log(x)
+            setWait(true)
+            await getCPF(x, cmy)
+            .then((CPFvalues) => {
+              const employeeShare = CPFvalues[1];
+              const employerShare = CPFvalues[2];
+              return { employeeShare, employerShare }
+            })
+            .then(({ employeeShare, employerShare }) => {
+              console.log("Payslip is being generated ..............")
+              checker(employeeShare, employerShare, x, cmy);
+            })
+          } else {
+            await foreignChecker(x,cmy)
+          }  
+  
         } else {
-          await foreignChecker(x,cmy)
-        }  
-
-      } else {
-        console.log("This employee is resigned : " + x.name);
-      }
-    }))
-    .then(() => {
+          console.log("This employee is resigned : " + x.name);
+        }
+      }));
       const nav = helpNav(cmy);
       setWait(false);
       push(`/dashboard/payslip-list/${nav}`);
-    })
+    } catch (error) {
+      console.log(error)
+    }
 
-  }
+  };
 
   if (open) {
     return (

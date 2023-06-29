@@ -33,7 +33,36 @@ const PayslipListOfMonthYear = ({params}) => {
     return <div>Error: {error.message}</div>;
   }
 
-  const test = data[0];
+  const final = data.map((x) => x.isFinal).every((isFinal) => isFinal === true);
+
+  console.log(final);
+
+  const handleFinalise = async () => {
+    console.log("Finalise has begun ....")
+    data.map((payslip) => {
+
+        const updatedPayslip = {
+            contributionMonthYear: payslip.contributionMonthYear,
+            dateOfPayment: payslip.dateOfPayment,
+            dateOfBirth: payslip.dateOfBirth,
+            isFinal: true
+        }
+
+        const send = fetch(`${apiUrl}/api/payslips/${payslip.id}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedPayslip)
+          });
+          
+          console.log(updatedPayslip);
+
+          if (send.ok) {
+            console.log("Payslip Finalised");
+          }
+    })
+  }
 
     const grossPay = (x) => {
         const a = Number(x.basicPay)+Number(x.allowance);
@@ -86,6 +115,11 @@ const PayslipListOfMonthYear = ({params}) => {
 
   return (
     <div className="box-border w-4/5 flex flex-col items-center gap-10">
+        {final && (
+            <div className="font-bold text-red-600">
+                This month inputs have been finalised 
+            </div>
+        )}
         <Table>
             <Table.Head>
                 <Table.HeadCell>
@@ -148,12 +182,14 @@ const PayslipListOfMonthYear = ({params}) => {
                 </Table.Row>
                 ))}
 
-                {console.log(data)}
-
             </Table.Body>
         </Table>
 
-        <Button onClick={() => setClicked(true)}> View All </Button>
+        <div className='flex gap-6 justify-center'>
+            <Button onClick={() => setClicked(true)}> View All </Button>
+            <Button onClick={handleFinalise} className="bg-red-600 hover:bg-red-500">Finalise</Button>
+        </div>
+
     </div>
   )
 }
