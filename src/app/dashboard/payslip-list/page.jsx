@@ -20,11 +20,22 @@ const PayslipList = () => {
     {value: 'September', label: 'September'},
     {value: 'October', label: 'October'},
     {value: 'November', label: 'November'},
-    {value: 'December', label: 'January'}
+    {value: 'December', label: 'December'}
   ];
 
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
+
+  const handleYearChange = (e) => {
+    const yearValue = e.target.value;
+
+    if (yearValue.length <= 4) {
+      setSelectedYear(e.target.value)
+    } else {
+      alert('Invalid Year !');
+    }
+    
+  };
 
   const handleClick = () => {
     const monthYear = selectedMonth.value + " " + selectedYear;
@@ -50,7 +61,7 @@ const PayslipList = () => {
             required
             type="text"
             value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
+            onChange={handleYearChange}
             className="box-border w-full text-sm"
           />
       </div>  

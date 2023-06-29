@@ -51,7 +51,7 @@ const CreateEmployee = () => {
             otHours: capturedOtHours,
             otPay: parseFloat(capturedOtPay).toFixed(2),
             modeOfPayment: modeOfPayment,
-            isResigned: isResigned,
+            isResigned: false,
             nationality: nationality,
             typeOfContributionRate: typeOfContribution,
             joinDate: joinDate,
@@ -109,7 +109,6 @@ const CreateEmployee = () => {
                         <fieldset
                             className="flex max-w-md gap-4"
                             id="radio"
-                            required
                         >
                             <legend className="mb-4 text-sm font-bold">
                                 Nationality
@@ -120,6 +119,7 @@ const CreateEmployee = () => {
                                     name="nationality"
                                     value="Singapore Citizen/Permanent Resident"
                                     onChange={(e) => setNationality(e.target.value)}
+                                    required
                                 />
                                 <Label htmlFor="SC/PR">
                                     Singapore Citizen/Permanent Resident
@@ -154,7 +154,6 @@ const CreateEmployee = () => {
                             <fieldset
                                 className="flex max-w-md flex-col gap-4"
                                 id="radio"
-                                required
                             >
                                 <legend className="mb-4 text-sm font-bold">
                                 Citizenship Status
@@ -165,6 +164,7 @@ const CreateEmployee = () => {
                                         name="citizenshipStatus"
                                         value="SC/3rdPR"
                                         onChange={(e) => setCitizenshipStatus(e.target.value)}
+                                        required
                                     />
                                     <Label htmlFor="sc/3rdPR">
                                         Singapore Citizen/3rd Year Permanent Resident and above
@@ -200,7 +200,6 @@ const CreateEmployee = () => {
                             <fieldset
                                 className="flex max-w-md flex-col gap-4"
                                 id="radio"
-                                required
                             >
                                 <legend className="mb-4 text-sm font-bold">
                                 Type Of Contribution Rates
@@ -211,6 +210,7 @@ const CreateEmployee = () => {
                                         name="typeOfContributionRates"
                                         value="G/G"
                                         onChange={(e) => setTypeOfContribution(e.target.value)}
+                                        required
                                     />
                                     <Label htmlFor="G/G" className='flex flex-col gap-1'>
                                         <div>Graduated Employer Rate and Employee Rate</div>
@@ -272,7 +272,6 @@ const CreateEmployee = () => {
                         <fieldset
                             className="flex max-w-md gap-4"
                             id="radio"
-                            required
                         >
                             <legend className="mb-4 text-sm font-bold">
                             Mode of Payment
@@ -283,6 +282,7 @@ const CreateEmployee = () => {
                                     name="modeOfPayment"
                                     value="Cash"
                                     onChange={(e) => setModeOfPayment(e.target.value)}
+                                    required
                                 />
                                 <Label htmlFor="cash">
                                     Cash
@@ -372,7 +372,7 @@ const CreateEmployee = () => {
                         />
                     </div>
 
-                    <div className='h-[78px]'>
+                    {/* <div className='h-[78px]'>
                         <fieldset
                             className="flex max-w-md gap-4"
                             id="radio"
@@ -426,7 +426,7 @@ const CreateEmployee = () => {
                                 onChange={(e) => setResignDate(e.target.value)}
                             />
                         </div>
-                    )}
+                    )} */}
                   
                 </div>
             </div>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import AdminPage from '@/components/AdminPage';
 import RegisterPage from '@/components/RegisterPage';
+import Loading from '@/components/Loading';
 
 const Dashboard = () => {
 
@@ -20,6 +21,7 @@ const Dashboard = () => {
   const [cmy, setCmy] = useState('');
   const [dateOfPayment, setDateOfPayment] = useState('');
   const [clicked, setClicked] = useState(false);
+  const [wait, setWait] = useState(false);
 
   // // fetch employees
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
@@ -27,7 +29,11 @@ const Dashboard = () => {
   const { data, error, isLoading } = useSWR(`${apiUrl}/api/employees/companyName/${companyName}`, fetcher);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loading />
+      </div> 
+      );
   }
 
   if (error) {
@@ -63,11 +69,12 @@ const Dashboard = () => {
 
   const employeeList = data;
   // `${apiUrl}/api/extract/`
-  
+  // https://singpayroll-cpf.onrender.com/api/extract
+
   const getCPF = async (employee, cmy) => {
     try {
       console.log("CPF is being generated ..............")
-      const res = await fetch("https://singpayroll-cpf.onrender.com/api/extract", {
+      const res = await fetch(`${apiUrl}/api/extract/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -261,6 +268,14 @@ const Dashboard = () => {
     return `${nav}`;
   }
 
+  if (wait) {
+    return (
+      <div>
+        <Loading />
+      </div> 
+    )
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -270,6 +285,8 @@ const Dashboard = () => {
       if (!x?.isResigned) {
         
         if (x?.nationality != "Foreigner") {
+          console.log(x)
+          setWait(true)
           await getCPF(x, cmy)
           .then((CPFvalues) => {
             const employeeShare = CPFvalues[1];
@@ -290,6 +307,7 @@ const Dashboard = () => {
     }))
     .then(() => {
       const nav = helpNav(cmy);
+      setWait(false);
       push(`/dashboard/payslip-list/${nav}`);
     })
 

@@ -5,6 +5,7 @@ import { Table } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Popup from './Popup';
+import Loading from './Loading';
 
 const AdminPage = () => {
 
@@ -17,8 +18,12 @@ const AdminPage = () => {
     const { data, error, isLoading } = useSWR(`${apiUrl}/api/users`, fetcher);
   
     if (isLoading) {
-      return <div>Loading...</div>;
-    }
+        return (
+          <div>
+            <Loading />
+          </div> 
+          );
+      }
   
     if (error) {
       return <div>Error: {error.message}</div>;

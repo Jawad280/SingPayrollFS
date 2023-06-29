@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Popup from './Popup';
+import Loading from './Loading';
 
 const EmployeeTable = () => {
 
@@ -22,7 +23,11 @@ const EmployeeTable = () => {
   const { data, error, isLoading } = useSWR(`${apiUrl}/api/employees/companyName/${companyName}`, fetcher);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loading />
+      </div> 
+      );
   }
 
   if (error) {

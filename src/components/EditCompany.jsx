@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { Button, Label, TextInput, Radio } from 'flowbite-react';
 import useSWR from 'swr';
 import { useRouter } from 'next/navigation';
+import Loading from './Loading';
 
 const EditCompany = ({companyId}) => {
     
@@ -29,8 +30,12 @@ const EditCompany = ({companyId}) => {
     const { data, error, isLoading } = useSWR(`${apiUrl}/api/users/${companyId}`, fetcher);
 
     if (isLoading) {
-        return <div>Loading...</div>;
-    }
+        return (
+          <div>
+            <Loading />
+          </div> 
+          );
+      }
     
     if (error) {
         return <div>Error: {error.message}</div>;

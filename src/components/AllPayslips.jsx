@@ -2,6 +2,7 @@
 import React from 'react'
 import useSWR from 'swr';
 import Payslip from './Payslip';
+import Loading from './Loading';
 
 const AllPayslips = ({ monthYear, companyName }) => {
 
@@ -12,7 +13,11 @@ const AllPayslips = ({ monthYear, companyName }) => {
     const { data, error, isLoading } = useSWR(`${apiUrl}/api/payslips/company/${companyName}/monthYear/${monthYear}`, fetcher);
 
     if (isLoading) {
-      return <div>Loading...</div>;
+      return (
+        <div>
+          <Loading />
+        </div> 
+        );
     }
 
     if (error) {

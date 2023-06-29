@@ -2,24 +2,27 @@
 import Payslip from '@/components/Payslip'
 import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr';
-import { Button } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
 import EditPayslip from '@/components/EditPayslip';
 import Image from 'next/image';
+import Loading from '@/components/Loading';
 
 const IndividualPayslip = ({params}) => {
 
     const { back } = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
     const [edit, setEdit] = useState(false);
-    const [dual, setDual] = useState(false);
 
     const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
     const { data, error, isLoading } = useSWR(`${apiUrl}/api/payslips/${params.id}`, fetcher);
-  
+
     if (isLoading) {
-      return <div>Loading...</div>;
+      return (
+        <div>
+          <Loading />
+        </div>
+      )
     }
   
     if (error) {

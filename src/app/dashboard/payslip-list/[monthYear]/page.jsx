@@ -6,6 +6,7 @@ import Link from 'next/link';
 import AllPayslips from '@/components/AllPayslips';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import Loading from '@/components/Loading';
 
 const PayslipListOfMonthYear = ({params}) => {
 
@@ -21,7 +22,11 @@ const PayslipListOfMonthYear = ({params}) => {
   const { data, error, isLoading } = useSWR(`${apiUrl}/api/payslips/company/${companyName}/monthYear/${monthYear}`, fetcher);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loading />
+      </div> 
+      );
   }
 
   if (error) {

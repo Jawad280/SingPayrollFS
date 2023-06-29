@@ -2,9 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 
 const userData = {
-    username: "jawad",
-    companyName: "jawad",
-    password: "1234",
+    username: "super-admin",
+    companyName: "Admin Account",
+    password: "1234!",
     isAdmin: true
 }
   

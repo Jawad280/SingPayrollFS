@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button, Label, TextInput } from 'flowbite-react';
 import Image from 'next/image';
+import Loading from '@/components/Loading';
 
 export default function Home() {
 
@@ -49,7 +50,11 @@ export default function Home() {
 
 
   if (session.status === 'loading') {
-    return <p>Loading...</p>
+    return (
+      <div>
+        <Loading />
+      </div>
+    )
   }
 
   if (session.status === 'authenticated') {

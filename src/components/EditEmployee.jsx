@@ -4,6 +4,7 @@ import { Button, Label, TextInput, Radio } from 'flowbite-react';
 import useSWR from 'swr';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Loading from './Loading';
 
 const EditEmployee = ({employeeId}) => {
     const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
@@ -46,8 +47,12 @@ const EditEmployee = ({employeeId}) => {
     const [showResignation, setShowResignation] = useState(isResigned);
 
     if (isLoading) {
-      return <div>Loading...</div>;
-    }
+        return (
+          <div>
+            <Loading />
+          </div> 
+          );
+      }
   
     if (error) {
       return <div>Error: {error.message}</div>;

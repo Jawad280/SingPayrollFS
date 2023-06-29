@@ -1,10 +1,13 @@
+'use client'
+
 import React from 'react'
+import { Spinner } from 'flowbite-react';
 
 const Loading = () => {
   return (
-    <div>
-        Your Content is being Loaded ..... Please wait.....
-    </div>
+    <Spinner
+      size="xl"
+    />
   )
 }
 
