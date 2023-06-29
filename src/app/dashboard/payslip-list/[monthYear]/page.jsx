@@ -55,8 +55,31 @@ const PayslipListOfMonthYear = ({params}) => {
             },
             body: JSON.stringify(updatedPayslip)
           });
-          
-          console.log(updatedPayslip);
+
+          if (send.ok) {
+            console.log("Payslip Finalised");
+          }
+    })
+  }
+
+  const handleUnfinalise = async () => {
+    console.log("Unfinalise has begun ....")
+    data.map((payslip) => {
+
+        const updatedPayslip = {
+            contributionMonthYear: payslip.contributionMonthYear,
+            dateOfPayment: payslip.dateOfPayment,
+            dateOfBirth: payslip.dateOfBirth,
+            isFinal: false
+        }
+
+        const send = fetch(`${apiUrl}/api/payslips/${payslip.id}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedPayslip)
+          });
 
           if (send.ok) {
             console.log("Payslip Finalised");
@@ -188,6 +211,7 @@ const PayslipListOfMonthYear = ({params}) => {
         <div className='flex gap-6 justify-center'>
             <Button onClick={() => setClicked(true)}> View All </Button>
             <Button onClick={handleFinalise} className="bg-red-600 hover:bg-red-500">Finalise</Button>
+            <Button onClick={handleUnfinalise} className="bg-indigo-600 hover:bg-indigo-500">Un-finalise</Button>
         </div>
 
     </div>
