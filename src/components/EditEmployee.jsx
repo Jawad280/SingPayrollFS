@@ -405,7 +405,7 @@ const EditEmployee = ({employeeId}) => {
                         </div>
                         <TextInput
                             type='text'
-                            value={data.designation}
+                            defaultValue={data.designation}
                             onChange={(e) => setDesignation(e.target.value)}
                         />
                     </div>

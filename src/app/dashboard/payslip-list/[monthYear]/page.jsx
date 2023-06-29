@@ -148,6 +148,7 @@ const PayslipListOfMonthYear = ({params}) => {
                 </Table.Row>
                 ))}
 
+                {console.log(data)}
 
             </Table.Body>
         </Table>

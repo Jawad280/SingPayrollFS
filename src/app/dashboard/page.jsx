@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import AdminPage from '@/components/AdminPage';
 import RegisterPage from '@/components/RegisterPage';
 import Loading from '@/components/Loading';
+import PopupMonth from '@/components/PopupMonth';
 
 const Dashboard = () => {
 
@@ -18,10 +19,13 @@ const Dashboard = () => {
 
   const { push } = useRouter();
 
-  const [cmy, setCmy] = useState('');
+  const [cmy, setCmy] = useState(new Date());
   const [dateOfPayment, setDateOfPayment] = useState('');
   const [clicked, setClicked] = useState(false);
   const [wait, setWait] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const [ok, setOk] = useState(true);
 
   // // fetch employees
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
@@ -68,6 +72,7 @@ const Dashboard = () => {
   }
 
   const employeeList = data;
+
   // `${apiUrl}/api/extract/`
   // https://singpayroll-cpf.onrender.com/api/extract
 
@@ -133,6 +138,7 @@ const Dashboard = () => {
     const name = formatMonthYear(contributionMonthYear);
     const NRIC = employee.NRIC;
     console.log("Checker activated", name, NRIC);
+    
 
     const res = await fetch(`${apiUrl}/api/payslips/name/${name}/${NRIC}`);
     const data = await res.json();
@@ -144,20 +150,20 @@ const Dashboard = () => {
         employeeRef: data.employeeRef,
         contributionMonthYear: contributionMonthYear,
         dateOfPayment: dateOfPayment,
-        employeeName: data.employeeName,
-        dateOfBirth: data.dateOfBirth,
-        citizenshipStatus: data.citizenshipStatus,
-        NRIC: data.NRIC,
-        basicPay: parseFloat(data.basicPay).toFixed(2),
-        allowance: parseFloat(data.allowance).toFixed(2),
-        additionalPay: parseFloat(data.additionalPay).toFixed(2),
-        otPay: parseFloat(data.otPay).toFixed(2),
-        otHours: data.otHours,
-        modeOfPayment: data.modeOfPayment,
-        isResigned: data.isResigned,
+        employeeName: employee.name,
+        dateOfBirth: employee.dateOfBirth,
+        citizenshipStatus: employee.citizenshipStatus,
+        NRIC: employee.NRIC,
+        basicPay: parseFloat(employee.basicPay).toFixed(2),
+        allowance: parseFloat(employee.allowance).toFixed(2),
+        additionalPay: parseFloat(employee.additionalPay).toFixed(2),
+        otPay: parseFloat(employee.otPay).toFixed(2),
+        otHours: employee.otHours,
+        modeOfPayment: employee.modeOfPayment,
+        isResigned: employee.isResigned,
         employeeShare: employeeShare,
         employerShare: employerShare,
-        designation: data.designation
+        designation: employee.designation
       }
   
       const send = await fetch(`${apiUrl}/api/payslips/${data.id}`, {
@@ -224,18 +230,18 @@ const Dashboard = () => {
         employeeRef: data.employeeRef,
         contributionMonthYear: contributionMonthYear,
         dateOfPayment: dateOfPayment,
-        employeeName: data.employeeName,
-        dateOfBirth: data.dateOfBirth,
-        citizenshipStatus: data.citizenshipStatus,
-        NRIC: data.NRIC,
-        basicPay: parseFloat(data.basicPay).toFixed(2),
-        allowance: parseFloat(data.allowance).toFixed(2),
-        additionalPay: parseFloat(data.additionalPay).toFixed(2),
-        otPay: parseFloat(data.otPay).toFixed(2),
-        otHours: data.otHours,
-        modeOfPayment: data.modeOfPayment,
-        isResigned: data.isResigned,
-        designation: data.designation,
+        employeeName: employee.name,
+        dateOfBirth: employee.dateOfBirth,
+        citizenshipStatus: employee.citizenshipStatus,
+        NRIC: employee.NRIC,
+        basicPay: parseFloat(employee.basicPay).toFixed(2),
+        allowance: parseFloat(employee.allowance).toFixed(2),
+        additionalPay: parseFloat(employee.additionalPay).toFixed(2),
+        otPay: parseFloat(employee.otPay).toFixed(2),
+        otHours: employee.otHours,
+        modeOfPayment: employee.modeOfPayment,
+        isResigned: employee.isResigned,
+        designation: employee.designation,
         companyName: companyName
       }
   
@@ -279,7 +285,7 @@ const Dashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log({cmy, dateOfPayment});
+    console.log("Cmy and Date of Payment : " , cmy, dateOfPayment);
 
     Promise.all(employeeList.map(async (x) => {
       if (!x?.isResigned) {
@@ -311,7 +317,12 @@ const Dashboard = () => {
       push(`/dashboard/payslip-list/${nav}`);
     })
 
+  }
 
+  if (open) {
+    return (
+      <PopupMonth label="Are you sure you want to choose an earlier date ?" setOpen={setOpen} fn={setOk}/>
+    )
   }
 
   return (
@@ -325,9 +336,24 @@ const Dashboard = () => {
               Contribution Month
           </div>
           <TextInput
-              type='date'
+              type='month'
               value={cmy}
-              onChange={(e) => setCmy(e.target.value)}
+              onChange={(e) => {
+                const [year, month] = e.target.value.split('-');
+                const selectedYear = parseInt(year);
+                const selectedMonth = parseInt(month);
+                const currentYear = new Date().getFullYear();
+                const currentMonth = new Date().getMonth() + 1;
+          
+                if (selectedYear < currentYear || (selectedYear === currentYear && selectedMonth < currentMonth)) {
+                  setOpen(true);
+                } 
+
+                if (ok) {
+                  setCmy(e.target.value);
+                }
+                
+              }}
           />
         </div>
 
