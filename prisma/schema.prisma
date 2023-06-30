@@ -65,6 +65,7 @@ model Payslip {
   designation           String?
   createdAt             DateTime @default(now())
   other                 String?
+  otherDeduction        String?
   netPay                String?
   isFinal               Boolean?
 }

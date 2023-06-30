@@ -65,6 +65,18 @@ const Payslip = ({payslipData}) => {
         return parseFloat(x).toFixed(2);
     }
 
+    const calculateDeduction = (empShare, otherDed) => {
+        // Extracting the numeric values from the strings
+        const employeeShareValue = parseFloat(empShare.replace("$", ""));
+        const otherDeductionValue = otherDed === null ? 0 : parseFloat(otherDed);
+
+        // Calculating the total deductions
+        const totalDeductions = employeeShareValue + otherDeductionValue;
+
+        // Formatting the total deductions as a string in the format "$..."
+        return "$" + totalDeductions.toFixed(2);
+    }
+
   return (
     <div className="h-[14.85cm] w-full flex items-center py-12 box-border">
 
@@ -124,18 +136,28 @@ const Payslip = ({payslipData}) => {
                     </tr>
 
                     <tr className='border-b border-gray-400'>
-                        <td className="p-2 border-r border-gray-400">Total Deductions (Employee CPF)</td>
+                        <td className="p-2 border-r border-gray-400">Total Deductions</td>
                         <td className='p-0'>
                             <div className='flex'>
-                                <div className='flex-1 text-right p-2 border-r border-gray-400'>{payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employeeShare}</div>
+                                <div className='flex-1 text-right p-2 border-r border-gray-400'>
+                                    {calculateDeduction(payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employeeShare, payslipData.otherDeduction)}
+                                </div>
                                 <div className='flex-none w-[30px] p-2'>(D)</div>
                             </div>
                         </td>
                     </tr>
 
                     <tr className='border-b border-gray-400'>
-                        <td className="p-2 border-r border-gray-400 text-left" colSpan="2">
-                            Other : {payslipData.other}
+                        <td className="p-2 border-r border-gray-400">Employee CPF</td>
+                        <td className='p-0'>
+                            <div className='text-right p-2  border-gray-400'>{payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employeeShare}</div>
+                        </td>
+                    </tr>
+
+                    <tr className='border-b border-gray-400'>
+                        <td className="p-2 border-r border-gray-400">Other : {payslipData.other}</td>
+                        <td className='p-0'>
+                            <div className='text-right p-2  border-gray-400'>${payslipData.otherDeduction}</div>
                         </td>
                     </tr>
 

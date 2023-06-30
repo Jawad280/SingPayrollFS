@@ -68,7 +68,20 @@ const EditPayslip = ({payslipData, setEdit}) => {
         return parseFloat(x).toFixed(2);
     }
 
+    const calculateDeduction = (empShare, otherDed) => {
+        // Extracting the numeric values from the strings
+        const employeeShareValue = parseFloat(empShare.replace("$", ""));
+        const otherDeductionValue = otherDed === null ? 0 : parseFloat(otherDed);
+
+        // Calculating the total deductions
+        const totalDeductions = employeeShareValue + otherDeductionValue;
+
+        // Formatting the total deductions as a string in the format "$..."
+        return "$" + totalDeductions.toFixed(2);
+    }
+
     const [other, setOther] = useState(payslipData.other || '');
+    const [otherDeduction, setOtherDeduction] = useState(payslipData.otherDeduction || '');
     const [np, setNp] = useState(payslipData.netPay || (payslipData.citizenshipStatus === "" ? netPayGenForeigner() : netPayGen()))
     const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
@@ -77,6 +90,7 @@ const EditPayslip = ({payslipData, setEdit}) => {
 
         const updatedPayslip = { 
             other: other, 
+            otherDeduction: otherDeduction,
             netPay: np,
             contributionMonthYear: payslipData.contributionMonthYear,
             dateOfPayment: payslipData.dateOfPayment,
@@ -152,7 +166,7 @@ const EditPayslip = ({payslipData, setEdit}) => {
                                 </div>
                             </td>
                         </tr>
-                        <tr className='border-b border-gray-400'>
+                        {/* <tr className='border-b border-gray-400'>
                             <td className="p-2 border-r border-gray-400">Total Deductions (Employee CPF)</td>
                             <td className='p-0'>
                                 <div className='flex'>
@@ -171,7 +185,52 @@ const EditPayslip = ({payslipData, setEdit}) => {
                                 className="w-full text-[12px] p-2 m-0 focus:outline-none border-none outline-none"
                                 />
                             </td>
+                        </tr> */}
+
+
+                        <tr className='border-b border-gray-400'>
+                            <td className="p-2 border-r border-gray-400">Total Deductions</td>
+                            <td className='p-0'>
+                                <div className='flex'>
+                                    <div className='flex-1 text-right p-2 border-r border-gray-400'>
+                                        {calculateDeduction(payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employeeShare, payslipData.otherDeduction)}
+                                    </div>
+                                    <div className='flex-none w-[30px] p-2'>(D)</div>
+                                </div>
+                            </td>
                         </tr>
+
+                        <tr className='border-b border-gray-400'>
+                            <td className="p-2 border-r border-gray-400">Employee CPF</td>
+                            <td className='p-0'>
+                                <div className='text-right p-2  border-gray-400'>{payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employeeShare}</div>
+                            </td>
+                        </tr>
+
+                        <tr className='border-b border-gray-400'>
+                            <td className="p-2 border-r border-gray-400">
+                                Other :
+                                <input
+                                    placeholder="Enter Here"
+                                    type="text"
+                                    value={other}
+                                    onChange={(e) => setOther(e.target.value)}
+                                    className="w-full text-[12px] p-2 m-0 focus:outline-none border-none outline-none"
+                                />    
+                            </td>
+                            <td className='p-0'>
+                                <input
+                                    placeholder="Enter Here"
+                                    type="text"
+                                    value={otherDeduction}
+                                    onChange={(e) => setOtherDeduction(e.target.value)}
+                                    className="w-full text-[12px] p-2 m-0 focus:outline-none border-none outline-none"
+                                />    
+                            </td>
+                        </tr>                        
+
+
+
                     </tbody>
                 </table>
             </div>
