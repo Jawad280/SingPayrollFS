@@ -164,7 +164,9 @@ const Payslip = ({payslipData}) => {
                     <tr className='border-b border-gray-400'>
                         <td className="p-2 border-r border-gray-400">Other : {payslipData.other}</td>
                         <td className='p-0'>
-                            <div className='text-right p-2  border-gray-400'>${payslipData.otherDeduction}</div>
+                            <div className='text-right p-2  border-gray-400'>
+                                {payslipData.citizenshipStatus === "" ? "$0.00" : ("$"+payslipData.otherDeduction)}
+                            </div>
                         </td>
                     </tr>
 

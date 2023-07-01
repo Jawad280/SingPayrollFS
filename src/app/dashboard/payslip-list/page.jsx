@@ -44,7 +44,7 @@ const PayslipList = () => {
   }
 
   return (
-    <div className="bg-indigo-100 p-6 rounded-lg flex flex-col items-center box-border w-2/5 gap-8">
+    <div className="bg-indigo-100 p-6 rounded-lg flex flex-col items-center box-border w-1/5 gap-8">
       <Select 
         options={months}
         value={selectedMonth}
