@@ -53,6 +53,13 @@ const Payslip = ({payslipData}) => {
         return twoDecimal(netPay);
     }
 
+    const totalCPF = () => {
+        const a = payslipData.citizenshipStatus === "" ? "0.00" : parseFloat(payslipData.employeeShare.replace(/[$,]/g, "")).toFixed(2);
+        const b = payslipData.citizenshipStatus === "" ? "0.00" : parseFloat(payslipData.employerShare.replace(/[$,]/g, "")).toFixed(2);
+        const result = Number(a) + Number(b);
+        return twoDecimal(result)
+    }
+
     const netPayGenForeigner = () => {
         const c = Number(twoDecimal(payslipData.basicPay)) + Number(twoDecimal(payslipData.allowance));
         const e = Number(twoDecimal(payslipData.otPay));
@@ -85,13 +92,13 @@ const Payslip = ({payslipData}) => {
                 Itemised Payslip
             </div>
 
-            <div className='flex flex-col'>
-                <div className="font-semibold text-[14px]">Name of Employer</div>
+            <div className='flex flex-col gap-2'>
+                <div className="font-semibold text-[14px] bg-slate-200 px-2 py-1 rounded-lg">Name of Employer</div>
                 <div className='text-[12px]'>{payslipData.companyName}</div>
             </div>
 
-            <div className='flex flex-col'>
-                <div className="font-semibold text-[14px]">Name of Employee</div>
+            <div className='flex flex-col gap-2'>
+                <div className="font-semibold text-[14px] bg-slate-200 px-2 py-1 rounded-lg">Name of Employee</div>
                 <div className='text-[12px]'>{payslipData.employeeName}</div>
             </div>
 
@@ -173,25 +180,25 @@ const Payslip = ({payslipData}) => {
             </div>
 
             <div className='flex items-center'>
-                <div className='flex flex-col items-start flex-1'>
-                    <div className='font-semibold text-[14px]'>Date of Payment</div>
+                <div className='flex flex-col items-start flex-1 gap-2'>
+                    <div className='font-semibold text-[14px] bg-slate-200 px-2 py-1 rounded-lg box-border w-[95%]'>Date of Payment</div>
                     <div className='text-[12px]'>{formatDate(payslipData.dateOfPayment)}</div>
                 </div>
 
-                <div className='flex flex-col items-start flex-1'>
-                    <div className='font-semibold text-[14px]'>Mode of Payment</div>
+                <div className='flex flex-col items-start flex-1 gap-2'>
+                    <div className='font-semibold text-[14px] bg-slate-200 px-2 py-1 rounded-lg box-border w-[95%]'>Mode of Payment</div>
                     <div className='text-[12px]'>{payslipData.modeOfPayment}</div>
                 </div>
             </div>
 
             <div className='flex items-center'>
-                <div className='flex flex-col items-start flex-1'>
-                    <div className='font-semibold text-[14px]'>NRIC/FIN</div>
+                <div className='flex flex-col items-start flex-1 gap-2'>
+                    <div className='font-semibold text-[14px] bg-slate-200 px-2 py-1 rounded-lg box-border w-[95%]'>NRIC/FIN</div>
                     <div className='text-[12px]'>{payslipData.NRIC}</div>
                 </div>
 
-                <div className='flex flex-col items-start flex-1'>
-                    <div className='font-semibold text-[14px]'>Designation</div>
+                <div className='flex flex-col items-start flex-1 gap-2'>
+                    <div className='font-semibold text-[14px] bg-slate-200 px-2 py-1 rounded-lg box-border w-[95%]'>Designation</div>
                     <div className='text-[12px]'>{payslipData.designation}</div>
                 </div>
             </div>
@@ -244,6 +251,13 @@ const Payslip = ({payslipData}) => {
                         <td className="p-2 border-r border-gray-400">Employer&apos;s CPF Contribution</td>
                         <td className='text-right p-2'>
                             {payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employerShare}
+                        </td>
+                    </tr>
+
+                    <tr className='border-b border-gray-400'>
+                        <td className="p-2 border-r border-gray-400">Total CPF Paid</td>
+                        <td className='text-right p-2'>
+                            ${totalCPF()}
                         </td>
                     </tr>
 

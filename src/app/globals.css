@@ -12,5 +12,6 @@
     #print-content,
     #print-content * {
       visibility: visible;
+      print-color-adjust: exact;
     }
 }
