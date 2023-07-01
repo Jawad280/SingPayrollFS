@@ -165,7 +165,7 @@ const Payslip = ({payslipData}) => {
                         <td className="p-2 border-r border-gray-400">Other : {payslipData.other}</td>
                         <td className='p-0'>
                             <div className='text-right p-2  border-gray-400'>
-                                ${payslipData.citizenshipStatus === "" ? "0.00" : payslipData.otherDeduction}</div>
+                                ${payslipData.otherDeduction === null ? "0.00" : payslipData.otherDeduction}</div>
                         </td>
                     </tr>
 
@@ -208,7 +208,7 @@ const Payslip = ({payslipData}) => {
                 <thead className='border-b border-gray-400'>
                     <tr>
                         <th className="p-2 border-r border-gray-400">Item</th>
-                        <th className="p-2"></th>
+                        <th className="p-2">Amount</th>
                     </tr>
                 </thead>
 
@@ -249,7 +249,7 @@ const Payslip = ({payslipData}) => {
                     </tr>
 
                     <tr className='border-b border-gray-400'>
-                        <td className="p-2 border-r border-gray-400">Employer&apos;s CPF Contribution</td>
+                        <td className="p-2 border-r border-gray-400">Employer&apos;s CPF</td>
                         <td className='text-right p-2'>
                             {payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employerShare}
                         </td>

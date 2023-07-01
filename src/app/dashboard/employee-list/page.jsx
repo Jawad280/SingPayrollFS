@@ -1,5 +1,7 @@
+
 import EmployeeTable from '@/components/EmployeeTable'
 import React from 'react'
+
 
 const EmployeeList = () => {
   return (

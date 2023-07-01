@@ -8,6 +8,9 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Loading from '@/components/Loading';
 
+import { saveAs } from 'file-saver'
+import * as XLSX from 'xlsx';
+
 const PayslipListOfMonthYear = ({params}) => {
 
     const session = useSession();
@@ -36,6 +39,18 @@ const PayslipListOfMonthYear = ({params}) => {
   const final = data.map((x) => x.isFinal).every((isFinal) => isFinal === true);
 
   console.log(final);
+
+  const handleDownload = () => {
+    const workbook = XLSX.utils.book_new();
+  
+    const worksheet = XLSX.utils.table_to_sheet(document.getElementById('payslip-table'));
+  
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Employee List');
+  
+    const xlFile = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  
+    saveAs(new Blob([xlFile]), `payslip-${monthYear.replace("%20", "-")}.xlsx`);
+  }
 
   const handleFinalise = async () => {
     console.log("Finalise has begun ....")
@@ -113,6 +128,13 @@ const PayslipListOfMonthYear = ({params}) => {
         return parseFloat(x).toFixed(2);
     }
 
+    const totalCPF = (ps) => {
+        const a = ps.citizenshipStatus === "" ? "0.00" : parseFloat(ps.employeeShare.replace(/[$,]/g, "")).toFixed(2);
+        const b = ps.citizenshipStatus === "" ? "0.00" : parseFloat(ps.employerShare.replace(/[$,]/g, "")).toFixed(2);
+        const result = Number(a) + Number(b);
+        return twoDecimal(result)
+    }
+
     const sortedPayslips = data?.sort((a, b) => a.employeeName.localeCompare(b.employeeName));
 
 
@@ -139,13 +161,14 @@ const PayslipListOfMonthYear = ({params}) => {
     }
 
   return (
-    <div className="box-border w-4/5 flex flex-col items-center gap-10">
+    <div className="box-border w-full flex flex-col items-center gap-10">
         {final && (
             <div className="font-bold text-red-600">
                 This month inputs have been finalised 
             </div>
         )}
-        <Table>
+        <div className='text-lg font-bold'>CPF Summary of {monthYear.replace("%20", " ")}</div>
+        <Table id='payslip-table'>
             <Table.Head>
                 <Table.HeadCell>
                     S/N
@@ -160,10 +183,6 @@ const PayslipListOfMonthYear = ({params}) => {
                 </Table.HeadCell>
 
                 <Table.HeadCell>
-                    Date Of Birth
-                </Table.HeadCell>
-
-                <Table.HeadCell>
                     Designation
                 </Table.HeadCell>
 
@@ -172,11 +191,15 @@ const PayslipListOfMonthYear = ({params}) => {
                 </Table.HeadCell>
 
                 <Table.HeadCell>
-                    Employee Contribution
+                    Employee CPF
                 </Table.HeadCell>
 
                 <Table.HeadCell>
-                    Employer Contribution
+                    Employer CPF
+                </Table.HeadCell>
+
+                <Table.HeadCell>
+                    Total CPF
                 </Table.HeadCell>
 
                 <Table.HeadCell>
@@ -191,15 +214,15 @@ const PayslipListOfMonthYear = ({params}) => {
             <Table.Body className="divide-y">
                 {sortedPayslips.map((test, index) => (
                 <Table.Row key={index+1} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{index+1}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{test.employeeName}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{test.NRIC}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{new Date(test.dateOfBirth).toLocaleDateString('en-GB')}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{test.designation}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">${grossPay(test)}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{test.employeeShare}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{test.employerShare}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{index+1}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.employeeName}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.NRIC}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.designation}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">${grossPay(test)}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.employeeShare === null ? "$0.00" : test.employeeShare}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.employerShare === null ? "$0.00" : test.employerShare}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">${totalCPF(test)}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">
                         <Link href={`/dashboard/payslip/${test.id}`}>
                             <Image src="/pencil-square.svg" alt="Edit" height={16} width={16} />
                         </Link>
@@ -212,6 +235,7 @@ const PayslipListOfMonthYear = ({params}) => {
 
         <div className='flex gap-6 justify-center'>
             <Button onClick={() => setClicked(true)}> View All </Button>
+            <Button onClick={handleDownload}> Download </Button>
             <Button onClick={handleFinalise} className="bg-red-600 hover:bg-red-500">Finalise</Button>
             <Button onClick={handleUnfinalise} className="bg-indigo-600 hover:bg-indigo-500">Un-finalise</Button>
         </div>
