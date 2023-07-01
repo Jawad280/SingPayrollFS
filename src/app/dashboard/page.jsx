@@ -291,43 +291,95 @@ const Dashboard = () => {
     )
   }
 
+  function chunkArray(array, size) {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size));
+    }
+    return result;
+  }
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   console.log("Cmy and Date of Payment : " , cmy, dateOfPayment);
+
+  //   const batches = chunkArray(employeeList, 10);
+
+  //   for(const batch of batches) {
+  //     setWait(true);
+
+  //     try {
+  //       await Promise.all(batch.map(async (x) => {
+  //         if (!x?.isResigned) {
+            
+  //           if (x?.nationality != "Foreigner") {
+  //             console.log(x)
+  //             setWait(true)
+  //             await getCPF(x, cmy)
+  //             .then((CPFvalues) => {
+  //               const employeeShare = CPFvalues[1];
+  //               const employerShare = CPFvalues[2];
+  //               return { employeeShare, employerShare }
+  //             })
+  //             .then(({ employeeShare, employerShare }) => {
+  //               console.log("Payslip is being generated ..............")
+  //               checker(employeeShare, employerShare, x, cmy);
+  //             })
+  //           } else {
+  //             await foreignChecker(x,cmy)
+  //           }  
+    
+  //         } else {
+  //           console.log("This employee is resigned : " + x.name);
+  //         }
+  //       }));
+  //       const nav = helpNav(cmy);
+  //       setWait(false);
+  //       push(`/dashboard/payslip-list/${nav}`);
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("Cmy and Date of Payment : " , cmy, dateOfPayment);
-
-    try {
-      await Promise.all(employeeList.map(async (x) => {
-        if (!x?.isResigned) {
-          
-          if (x?.nationality != "Foreigner") {
-            console.log(x)
-            setWait(true)
-            await getCPF(x, cmy)
-            .then((CPFvalues) => {
-              const employeeShare = CPFvalues[1];
-              const employerShare = CPFvalues[2];
-              return { employeeShare, employerShare }
-            })
-            .then(({ employeeShare, employerShare }) => {
-              console.log("Payslip is being generated ..............")
-              checker(employeeShare, employerShare, x, cmy);
-            })
-          } else {
-            await foreignChecker(x,cmy)
-          }  
   
-        } else {
-          console.log("This employee is resigned : " + x.name);
-        }
-      }));
+    console.log("Cmy and Date of Payment:", cmy, dateOfPayment);
+  
+    const batches = chunkArray(employeeList, 10);
+  
+    try {
+      setWait(true);
+  
+      for (const batch of batches) {
+        await Promise.all(
+          batch.map(async (x) => {
+            if (!x?.isResigned) {
+              if (x?.nationality !== "Foreigner") {
+                console.log(x);
+                const CPFvalues = await getCPF(x, cmy);
+                const employeeShare = CPFvalues[1];
+                const employerShare = CPFvalues[2];
+                console.log("Payslip is being generated..............");
+                checker(employeeShare, employerShare, x, cmy);
+              } else {
+                await foreignChecker(x, cmy);
+              }
+            } else {
+              console.log("This employee is resigned: " + x.name);
+            }
+          })
+        );
+      }
+  
       const nav = helpNav(cmy);
       setWait(false);
       push(`/dashboard/payslip-list/${nav}`);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
   };
 
   if (open) {

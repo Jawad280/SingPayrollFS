@@ -187,11 +187,7 @@ const PayslipListOfMonthYear = ({params}) => {
                 </Table.HeadCell>
 
                 <Table.HeadCell>
-                    Gross Pay
-                </Table.HeadCell>
-
-                <Table.HeadCell>
-                    Employee CPF
+                    Total CPF
                 </Table.HeadCell>
 
                 <Table.HeadCell>
@@ -199,7 +195,11 @@ const PayslipListOfMonthYear = ({params}) => {
                 </Table.HeadCell>
 
                 <Table.HeadCell>
-                    Total CPF
+                    Employee CPF
+                </Table.HeadCell>
+
+                <Table.HeadCell>
+                    Gross Pay
                 </Table.HeadCell>
 
                 <Table.HeadCell>
@@ -218,10 +218,10 @@ const PayslipListOfMonthYear = ({params}) => {
                     <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.employeeName}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.NRIC}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.designation}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">${grossPay(test)}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.employeeShare === null ? "$0.00" : test.employeeShare}</Table.Cell>
-                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.employerShare === null ? "$0.00" : test.employerShare}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">${totalCPF(test)}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.employerShare === null ? "$0.00" : test.employerShare}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.employeeShare === null ? "$0.00" : test.employeeShare}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">${grossPay(test)}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">
                         <Link href={`/dashboard/payslip/${test.id}`}>
                             <Image src="/pencil-square.svg" alt="Edit" height={16} width={16} />
