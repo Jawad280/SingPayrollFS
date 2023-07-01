@@ -34,6 +34,8 @@ const EmployeeTable = () => {
     return <div>Error: {error.message}</div>;
   }
 
+  const sortedEmployees = data?.sort((a, b) => a.name.localeCompare(b.name));
+
   const handleDelete = async (canDelete) => {
     if (canDelete) {
         try {
@@ -105,7 +107,7 @@ const EmployeeTable = () => {
             <Table.Body className="divide-y">
                 {console.log(data)}
 
-            {data?.map((x, index) => (
+            {sortedEmployees?.map((x, index) => (
                 <Table.Row key={index+1} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{index+1}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{x.name}</Table.Cell>

@@ -26,7 +26,7 @@ const AllPayslips = ({ monthYear, companyName }) => {
 
   return (
     <div className='flex flex-col items-center'>
-      {data.map((x) => (
+      {data?.map((x) => (
         <div className='flex flex-col items-center w-[21cm] h-[14.8cm] bg-white border' key={x.id} id='print-content'>
           <Payslip payslipData={x} />
         </div>

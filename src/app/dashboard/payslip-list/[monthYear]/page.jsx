@@ -113,6 +113,8 @@ const PayslipListOfMonthYear = ({params}) => {
         return parseFloat(x).toFixed(2);
     }
 
+    const sortedPayslips = data?.sort((a, b) => a.employeeName.localeCompare(b.employeeName));
+
 
     if (clicked) {
         return (
@@ -187,7 +189,7 @@ const PayslipListOfMonthYear = ({params}) => {
 
 
             <Table.Body className="divide-y">
-                {data.map((test, index) => (
+                {sortedPayslips.map((test, index) => (
                 <Table.Row key={index+1} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{index+1}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{test.employeeName}</Table.Cell>
