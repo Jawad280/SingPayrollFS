@@ -6,11 +6,11 @@ import { NextResponse } from "next/server";
 export async function GET(req, {params}) {
     const name = params.name;
 
-    const payslip = await prisma.payslip.findUnique({
+    const payslips = await prisma.payslip.findMany({
         where: {
             name: name
         }
     })
 
-    return NextResponse.json(payslip);
+    return NextResponse.json(payslips);
 }

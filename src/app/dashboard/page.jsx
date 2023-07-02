@@ -8,6 +8,7 @@ import AdminPage from '@/components/AdminPage';
 import RegisterPage from '@/components/RegisterPage';
 import Loading from '@/components/Loading';
 import PopupMonth from '@/components/PopupMonth';
+import Month from '@/components/Month';
 
 const Dashboard = () => {
 
@@ -144,8 +145,7 @@ const Dashboard = () => {
     
     if (data) {
       if (data.isFinal) {
-        alert("Payslips have been finalised for the chosen month, no more edits can occur !")
-        console.log("Payslips have been finalised, no more edits can occur !")
+        console.log("Payslips have been finalised for the chosen month, no more edits can occur !")
       } else {
           const updatedPayslip = {
             name: data.name,
@@ -299,50 +299,6 @@ const Dashboard = () => {
     return result;
   }
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   console.log("Cmy and Date of Payment : " , cmy, dateOfPayment);
-
-  //   const batches = chunkArray(employeeList, 10);
-
-  //   for(const batch of batches) {
-  //     setWait(true);
-
-  //     try {
-  //       await Promise.all(batch.map(async (x) => {
-  //         if (!x?.isResigned) {
-            
-  //           if (x?.nationality != "Foreigner") {
-  //             console.log(x)
-  //             setWait(true)
-  //             await getCPF(x, cmy)
-  //             .then((CPFvalues) => {
-  //               const employeeShare = CPFvalues[1];
-  //               const employerShare = CPFvalues[2];
-  //               return { employeeShare, employerShare }
-  //             })
-  //             .then(({ employeeShare, employerShare }) => {
-  //               console.log("Payslip is being generated ..............")
-  //               checker(employeeShare, employerShare, x, cmy);
-  //             })
-  //           } else {
-  //             await foreignChecker(x,cmy)
-  //           }  
-    
-  //         } else {
-  //           console.log("This employee is resigned : " + x.name);
-  //         }
-  //       }));
-  //       const nav = helpNav(cmy);
-  //       setWait(false);
-  //       push(`/dashboard/payslip-list/${nav}`);
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -359,11 +315,11 @@ const Dashboard = () => {
             if (!x?.isResigned) {
               if (x?.nationality !== "Foreigner") {
                 console.log(x);
-                const CPFvalues = await getCPF(x, cmy);
-                const employeeShare = CPFvalues[1];
-                const employerShare = CPFvalues[2];
-                console.log("Payslip is being generated..............");
-                checker(employeeShare, employerShare, x, cmy);
+                  const CPFvalues = await getCPF(x, cmy);
+                  const employeeShare = CPFvalues[1];
+                  const employerShare = CPFvalues[2];
+                  console.log("Payslip is being generated..............");
+                  checker(employeeShare, employerShare, x, cmy);
               } else {
                 await foreignChecker(x, cmy);
               }
@@ -381,6 +337,8 @@ const Dashboard = () => {
       console.log(error);
     }
   };
+  
+
 
   if (open) {
     return (
@@ -389,8 +347,11 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="box-border w-full flex flex-col items-center">
-      {console.log(session.data.user)}
+    <div className="box-border w-full flex items-center gap-8 justify-center">
+
+      <div>
+        <Month companyName={companyName}/>
+      </div>
 
       <form className='flex flex-col gap-8 bg-indigo-100 shadow-lg p-6 rounded-lg w-1/5' onSubmit={handleSubmit}>
 
@@ -434,6 +395,8 @@ const Dashboard = () => {
         <Button type='submit' className="bg-sky-700 hover:bg-sky-600">Generate</Button>
 
       </form>
+
+
     </div>
   )
 }

@@ -38,7 +38,6 @@ const PayslipListOfMonthYear = ({params}) => {
 
   const final = data.map((x) => x.isFinal).every((isFinal) => isFinal === true);
 
-  console.log(final);
 
   const handleDownload = () => {
     const workbook = XLSX.utils.book_new();
@@ -69,7 +68,9 @@ const PayslipListOfMonthYear = ({params}) => {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(updatedPayslip)
+            
           });
+          console.log(updatedPayslip)
 
           if (send.ok) {
             console.log("Payslip Finalised");

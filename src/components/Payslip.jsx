@@ -44,14 +44,6 @@ const Payslip = ({payslipData}) => {
         return twoDecimal(a).toString();
     }
 
-    const netPayGen = () => {
-        const c = Number(payslipData.basicPay)+Number(payslipData.allowance);
-        const d = parseFloat(payslipData.employeeShare.replace(/[$,]/g, "")).toFixed(2);
-        const e = Number(payslipData.otPay);
-        const f = Number(payslipData.additionalPay);
-        const netPay = c-d+e+f;
-        return twoDecimal(netPay);
-    }
 
     const totalCPF = () => {
         const a = payslipData.citizenshipStatus === "" ? "0.00" : parseFloat(payslipData.employeeShare.replace(/[$,]/g, "")).toFixed(2);
@@ -87,6 +79,16 @@ const Payslip = ({payslipData}) => {
         // Formatting the total deductions as a string in the format "$..."
         return "$" + totalDeductions.toFixed(2);
       };
+
+    const netPayGen = () => {
+        const c = Number(payslipData.basicPay)+Number(payslipData.allowance);
+        const totalDeduction = calculateDeduction((payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employeeShare), payslipData.otherDeduction)
+        const d = Number(parseFloat(totalDeduction.replace(/[$,]/g, "")));
+        const e = Number(payslipData.otPay);
+        const f = Number(payslipData.additionalPay);
+        const netPay = c-d+e+f;
+        return twoDecimal(netPay);
+    }
 
   return (
     <div className="h-[14.85cm] w-full flex items-center py-12 box-border">
@@ -248,7 +250,7 @@ const Payslip = ({payslipData}) => {
                     <tr className='border-b border-gray-400'>
                         <td className="p-2 border-r border-gray-400">Net Pay (C-D+E+F)</td>
                         <td className='text-right p-2 font-bold'>
-                            ${payslipData.netPay || (payslipData.citizenshipStatus === "" ? netPayGenForeigner() : netPayGen())}
+                            ${(payslipData.citizenshipStatus === "" ? netPayGenForeigner() : netPayGen())}
                         </td>
                     </tr>
 

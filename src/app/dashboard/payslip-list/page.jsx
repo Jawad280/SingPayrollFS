@@ -3,8 +3,13 @@ import React, { useState } from 'react';
 import Select from 'react-select';
 import { Button, Label, TextInput } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import Month from '@/components/Month';
 
 const PayslipList = () => {
+  const session = useSession();
+  const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  const companyName = session.data.user.name.companyName;
   
   const { push } = useRouter();
 
@@ -44,31 +49,33 @@ const PayslipList = () => {
   }
 
   return (
-    <div className="bg-indigo-100 p-6 rounded-lg flex flex-col items-center box-border w-1/5 gap-8">
-      <Select 
-        options={months}
-        value={selectedMonth}
-        onChange={setSelectedMonth} 
-        placeholder="Choose Month"
-        isSearchable={false}
-        required
-        className="box-border w-full text-sm"
-      />
-
-      <div className="box-border w-full">
-          <TextInput
-            placeholder="Enter Year"
-            required
-            type="text"
-            value={selectedYear}
-            onChange={handleYearChange}
-            className="box-border w-full text-sm"
-          />
-      </div>  
-
-      <Button onClick={handleClick} className="bg-sky-700 hover:bg-sky-600"> Retrieve </Button>
-
-  </div>
+    <div className='flex gap-8 items-center justify-center box-border w-full'>
+      <div>
+        <Month companyName={companyName}/>
+      </div>
+      <div className="bg-indigo-100 p-6 rounded-lg flex flex-col items-center box-border w-1/5 gap-8">
+        <Select
+          options={months}
+          value={selectedMonth}
+          onChange={setSelectedMonth}
+          placeholder="Choose Month"
+          isSearchable={false}
+          required
+          className="box-border w-full text-sm"
+        />
+        <div className="box-border w-full">
+            <TextInput
+              placeholder="Enter Year"
+              required
+              type="text"
+              value={selectedYear}
+              onChange={handleYearChange}
+              className="box-border w-full text-sm"
+            />
+        </div>
+        <Button onClick={handleClick} className="bg-sky-700 hover:bg-sky-600"> Retrieve </Button>
+      </div>
+    </div>
   )
 }
 

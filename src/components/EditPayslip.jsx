@@ -49,7 +49,8 @@ const EditPayslip = ({payslipData, setEdit}) => {
 
     const netPayGen = () => {
         const c = Number(payslipData.basicPay)+Number(payslipData.allowance);
-        const d = parseFloat(payslipData.employeeShare.replace(/[$,]/g, "")).toFixed(2);
+        const totalDeduction = calculateDeduction((payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employeeShare), payslipData.otherDeduction)
+        const d = Number(parseFloat(totalDeduction.replace(/[$,]/g, "")));
         const e = Number(payslipData.otPay);
         const f = Number(payslipData.additionalPay);
         const netPay = c-d+e+f;
@@ -58,9 +59,11 @@ const EditPayslip = ({payslipData, setEdit}) => {
 
     const netPayGenForeigner = () => {
         const c = Number(twoDecimal(payslipData.basicPay)) + Number(twoDecimal(payslipData.allowance));
+        const totalDeduction = calculateDeduction((payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employeeShare), payslipData.otherDeduction)
+        const d = Number(parseFloat(totalDeduction.replace(/[$,]/g, "")));
         const e = Number(twoDecimal(payslipData.otPay));
         const f = Number(twoDecimal(payslipData.additionalPay));
-        const netPay = c+e+f;
+        const netPay = c-d+e+f;
         return twoDecimal(netPay);
     }
 
@@ -82,7 +85,7 @@ const EditPayslip = ({payslipData, setEdit}) => {
 
     const [other, setOther] = useState(payslipData.other || '');
     const [otherDeduction, setOtherDeduction] = useState(payslipData.otherDeduction || '');
-    const [np, setNp] = useState(payslipData.netPay || (payslipData.citizenshipStatus === "" ? netPayGenForeigner() : netPayGen()))
+    // const [np, setNp] = useState(payslipData.netPay || (payslipData.citizenshipStatus === "" ? netPayGenForeigner() : netPayGen()))
     const apiUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
     const handleSave = async (e) => {
@@ -91,7 +94,6 @@ const EditPayslip = ({payslipData, setEdit}) => {
         const updatedPayslip = { 
             other: other, 
             otherDeduction: otherDeduction,
-            netPay: np,
             contributionMonthYear: payslipData.contributionMonthYear,
             dateOfPayment: payslipData.dateOfPayment,
             dateOfBirth:payslipData.dateOfBirth 
@@ -291,7 +293,7 @@ const EditPayslip = ({payslipData, setEdit}) => {
                                 </div>
                             </td>
                         </tr>
-                        <tr className='border-b border-gray-400'>
+                        {/* <tr className='border-b border-gray-400'>
                             <td className="p-2 border-r border-gray-400">Net Pay (C-D+E+F)</td>
                             <td className='text-right p-0 font-bold'>
                                 <input
@@ -301,7 +303,15 @@ const EditPayslip = ({payslipData, setEdit}) => {
                                     className="text-[12px] p-2 focus:outline-0 border-0 text-right"
                                 />
                             </td>
+                        </tr> */}
+
+                        <tr className='border-b border-gray-400'>
+                            <td className="p-2 border-r border-gray-400">Net Pay (C-D+E+F)</td>
+                            <td className='text-right p-2 font-bold'>
+                                ${(payslipData.citizenshipStatus === "" ? netPayGenForeigner() : netPayGen())}
+                            </td>
                         </tr>
+
                         <tr className='border-b border-gray-400'>
                             <td className="p-2 border-r border-gray-400">Employer&apos;s CPF Contribution</td>
                             <td className='text-right p-2'>

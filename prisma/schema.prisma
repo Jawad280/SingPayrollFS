@@ -17,6 +17,7 @@ model User {
   password    String
   isAdmin     Boolean?
   license     DateTime?
+  lastGen     DateTime? 
   createdAt   DateTime  @default(now())
 }
 
@@ -70,8 +71,3 @@ model Payslip {
   isFinal               Boolean?
 }
 
-model Year {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-}

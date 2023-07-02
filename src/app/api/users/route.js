@@ -18,7 +18,7 @@ export async function POST(req) {
   try {
     const json = await req.json();
   
-    const { password, license: licenseString, ...userData } = json;
+    const { password, license: licenseString, lastGen: lastGenString, ...userData } = json;
   
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -29,7 +29,7 @@ export async function POST(req) {
       data: {
         ...userData,
         password: hashedPassword,
-        license,
+        license
       },
     });
   

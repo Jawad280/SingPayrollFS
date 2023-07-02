@@ -33,8 +33,9 @@ export async function PATCH(req, { params }) {
     const id = params.id;
     const inputs = await req.json();
 
-    const { license: licenseString, ...userData } = inputs;
+    const { lastGen: lastGenString, license: licenseString, ...userData } = inputs;
     const license = licenseString ? parseISO(licenseString) : null;
+    const lastGen = lastGenString ? parseISO(lastGenString) : null;
 
     const updatedUser = await prisma.user.update({
         where: {
@@ -42,7 +43,8 @@ export async function PATCH(req, { params }) {
         },
         data: {
             ...userData,
-            license: license
+            license: license,
+            lastGen: lastGen
         }
     });
 
