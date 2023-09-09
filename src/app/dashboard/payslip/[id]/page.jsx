@@ -32,7 +32,7 @@ const IndividualPayslip = ({params}) => {
   if (edit) {
     return (
       <div className='flex flex-col items-center relative box-border w-full'>
-        <div className='border w-[21cm] h-[14.8cm] box-border' id='print-content'>
+        <div className='border w-[21cm] h-[14.85cm] box-border' id='print-content'>
             <EditPayslip payslipData={data} setEdit={setEdit}/>
         </div>
       </div> 
@@ -43,7 +43,7 @@ const IndividualPayslip = ({params}) => {
 
   return (
     <div className='flex flex-col items-center relative box-border w-full'>
-      <div className='border w-[21cm] h-[14.8cm] box-border' id='print-content'>
+      <div className='border w-[21cm] h-[14.85cm] box-border' id='print-content'>
           <Payslip payslipData={data} />
       </div>
 

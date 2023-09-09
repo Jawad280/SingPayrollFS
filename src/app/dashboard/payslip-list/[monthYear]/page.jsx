@@ -108,22 +108,32 @@ const PayslipListOfMonthYear = ({params}) => {
         return twoDecimal(a).toString();
     }
 
-    const netPayGen = (x) => {
-        const c = Number(x.basicPay)+Number(x.allowance);
-        const d = parseFloat(x.employeeShare.replace(/[$,]/g, "")).toFixed(2);
-        const e = Number(x.otPay);
-        const f = Number(x.additionalPay);
+    const calculateDeduction = (empShare, otherDed) => {
+        // Removing commas from the string values
+        const employeeShareString = empShare.replace("$", "").replace(/,/g, "");
+        const otherDeductionString = otherDed === null ? "0" : otherDed.replace(/,/g, "");
+      
+        // Extracting the numeric values from the strings
+        const employeeShareValue = parseFloat(employeeShareString);
+        const otherDeductionValue = parseFloat(otherDeductionString);
+      
+        // Calculating the total deductions
+        const totalDeductions = employeeShareValue + otherDeductionValue;
+      
+        // Formatting the total deductions as a string in the format "$..."
+        return "$" + totalDeductions.toFixed(2);
+      };
+
+    const netPayGen = (payslipData) => {
+        const c = Number(payslipData.basicPay)+Number(payslipData.allowance);
+        const totalDeduction = calculateDeduction((payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employeeShare), payslipData.otherDeduction)
+        const d = Number(parseFloat(totalDeduction.replace(/[$,]/g, "")));
+        const e = Number(payslipData.otPay);
+        const f = Number(payslipData.additionalPay);
         const netPay = c-d+e+f;
         return twoDecimal(netPay);
     }
 
-    const netPayGenForeigner = (x) => {
-        const c = twoDecimal(Number(x.basicPay)+Number(x.allowance));
-        const e = Number(twoDecimal(x.otPay));
-        const f = Number(twoDecimal(x.additionalPay));
-        const netPay = c+e+f;
-        return twoDecimal(netPay);
-    }
 
     const twoDecimal = (x) => {
         return parseFloat(x).toFixed(2);
@@ -204,6 +214,10 @@ const PayslipListOfMonthYear = ({params}) => {
                 </Table.HeadCell>
 
                 <Table.HeadCell>
+                    Net Pay
+                </Table.HeadCell>
+
+                <Table.HeadCell>
                     <span className="sr-only">
                     View
                     </span>
@@ -223,6 +237,7 @@ const PayslipListOfMonthYear = ({params}) => {
                     <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.employerShare === null ? "$0.00" : test.employerShare}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">{test.employeeShare === null ? "$0.00" : test.employeeShare}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">${grossPay(test)}</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">${netPayGen(test)}</Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-sm text-gray-900 dark:text-white">
                         <Link href={`/dashboard/payslip/${test.id}`}>
                             <Image src="/pencil-square.svg" alt="Edit" height={16} width={16} />

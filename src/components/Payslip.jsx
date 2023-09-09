@@ -52,13 +52,15 @@ const Payslip = ({payslipData}) => {
         return twoDecimal(result)
     }
 
-    const netPayGenForeigner = () => {
-        const c = Number(twoDecimal(payslipData.basicPay)) + Number(twoDecimal(payslipData.allowance));
-        const e = Number(twoDecimal(payslipData.otPay));
-        const f = Number(twoDecimal(payslipData.additionalPay));
-        const netPay = c+e+f;
-        return twoDecimal(netPay);
-    }
+    // const netPayGenForeigner = () => {
+    //     const c = Number(twoDecimal(payslipData.basicPay)) + Number(twoDecimal(payslipData.allowance));
+    //     const totalDeduction = calculateDeduction((payslipData.citizenshipStatus === "" ? "$0.00" : payslipData.employeeShare), payslipData.otherDeduction)
+    //     const d = Number(parseFloat(totalDeduction.replace(/[$,]/g, "")));
+    //     const e = Number(twoDecimal(payslipData.otPay));
+    //     const f = Number(twoDecimal(payslipData.additionalPay));
+    //     const netPay = c-d+e+f;
+    //     return twoDecimal(netPay);
+    // }
 
     const twoDecimal = (x) => {
         return parseFloat(x).toFixed(2);
@@ -250,7 +252,7 @@ const Payslip = ({payslipData}) => {
                     <tr className='border-b border-gray-400'>
                         <td className="p-2 border-r border-gray-400">Net Pay (C-D+E+F)</td>
                         <td className='text-right p-2 font-bold'>
-                            ${(payslipData.citizenshipStatus === "" ? netPayGenForeigner() : netPayGen())}
+                            ${netPayGen()}
                         </td>
                     </tr>
 

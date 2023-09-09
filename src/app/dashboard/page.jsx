@@ -139,7 +139,8 @@ const Dashboard = () => {
     const NRIC = employee.NRIC;
     console.log("Checker activated", name, NRIC);
     
-    const res = await fetch(`${apiUrl}/api/payslips/name/${name}/${NRIC}`);
+    // const res = await fetch(`${apiUrl}/api/payslips/name/${name}/${NRIC}`);
+    const res = await fetch(`${apiUrl}/api/payslips/name/${name}/${NRIC}/${companyName}`);
     const data = await res.json();
     console.log(data);
     
@@ -309,25 +310,40 @@ const Dashboard = () => {
     try {
       setWait(true);
   
-      for (const batch of batches) {
-        await Promise.all(
-          batch.map(async (x) => {
-            if (!x?.isResigned) {
-              if (x?.nationality !== "Foreigner") {
-                console.log(x);
-                  const CPFvalues = await getCPF(x, cmy);
-                  const employeeShare = CPFvalues[1];
-                  const employerShare = CPFvalues[2];
-                  console.log("Payslip is being generated..............");
-                  checker(employeeShare, employerShare, x, cmy);
-              } else {
-                await foreignChecker(x, cmy);
-              }
-            } else {
-              console.log("This employee is resigned: " + x.name);
-            }
-          })
-        );
+      // for (const batch of batches) {
+      //   for (const x of batch) {
+      //     if (!x?.isResigned) {
+      //       if (x?.nationality !== "Foreigner") {
+      //         const CPFvalues = await getCPF(x, cmy);
+      //         console.log(x.name, CPFvalues);
+      //         const employeeShare = CPFvalues[1];
+      //         const employerShare = CPFvalues[2];
+      //         console.log("Payslip is being generated..............");
+      //         await checker(employeeShare, employerShare, x, cmy);
+      //       } else {
+      //         await foreignChecker(x, cmy);
+      //       }
+      //     } else {
+      //       console.log("This employee is resigned: " + x.name);
+      //     }
+      //   }
+      // }
+
+      for (const x of employeeList) {
+        if (!x?.isResigned) {
+          if (x?.nationality !== "Foreigner") {
+            const CPFvalues = await getCPF(x, cmy);
+            console.log(x.name, CPFvalues);
+            const employeeShare = CPFvalues[1];
+            const employerShare = CPFvalues[2];
+            console.log("Payslip is being generated..............");
+            await checker(employeeShare, employerShare, x, cmy);
+          } else {
+            await foreignChecker(x, cmy);
+          }
+        } else {
+          console.log("This employee is resigned: " + x.name);
+        }
       }
   
       const nav = helpNav(cmy);
@@ -338,8 +354,6 @@ const Dashboard = () => {
     }
   };
   
-
-
   if (open) {
     return (
       <PopupMonth label="Are you sure you want to choose an earlier date ?" setOpen={setOpen} fn={setOk}/>
